@@ -88,7 +88,7 @@
         <input id="dni" placeholder="DNI (12345678A)" class="input-field p-3 rounded-lg md:col-span-1 uppercase">
         <input id="nombre" placeholder="Nombre completo" class="input-field p-3 rounded-lg md:col-span-2">
         <select id="tipo" class="input-field p-3 rounded-lg">
-          <option value="ETT"> ETT</option>
+          <option value="ETT">💼 ETT</option>
           <option value="Externos">🌐 Externos</option>
         </select>
         <input id="depto" placeholder="Departamento / Empresa" class="input-field p-3 rounded-lg">
@@ -98,7 +98,7 @@
         <button id="btnEntrada" class="btn-primary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span>🟢</span> Registrar Entrada</button>
         <button id="btnSalida" class="btn-secondary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span>🟠</span> Registrar Salida</button>
         <button id="btnGuardarEmpleado" class="btn-db px-4 py-3 rounded-lg font-semibold text-white flex items-center gap-2 border border-purple-500/50">💾 Guardar Empleado</button>
-        <button id="btnImport" class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition"> CSV Personal</button>
+        <button id="btnImport" class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition">📥 CSV Personal</button>
       </div>
       <p id="formMsg" class="text-sm mt-3 hidden"></p>
     </div>
@@ -120,7 +120,7 @@
       <p id="formMsgLlaves" class="text-sm mt-3 hidden"></p>
     </div>
 
-        <!-- FORM VEHICULOS -->
+    <!-- FORM VEHICULOS -->
     <div id="formVehiculos" class="hidden glass-card p-6 rounded-xl mb-6">
       <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
         <input id="matriculaInput" placeholder="Matrícula (0000AAA)" class="input-field p-3 rounded-lg md:col-span-1 uppercase">
@@ -141,10 +141,10 @@
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
           <thead class="bg-slate-800/80 text-slate-300 uppercase text-xs" id="tableHead">
-            <!-- Dynamic headers -->
+            <tr><th class="p-4 text-left">Tipo</th><th class="p-4 text-left">Nombre</th><th class="p-4 text-left">DNI</th><th class="p-4 text-left">Entrada</th><th class="p-4 text-left">Salida</th><th class="p-4 text-left">Total</th><th class="p-4 text-left">Depto.</th><th class="p-4 text-left">Obs.</th><th class="p-4 text-center">Acción</th></tr>
           </thead>
           <tbody id="tableBody" class="divide-y divide-slate-700/50">
-            <tr><td colspan="9" class="p-8 text-center text-slate-500">Selecciona una pestaña</td></tr>
+            <tr><td colspan="9" class="p-8 text-center text-slate-500">Cargando...</td></tr>
           </tbody>
         </table>
       </div>
@@ -157,8 +157,6 @@
   </div>
 
   <!-- MODALES -->
-  
-  <!-- Import Personal -->
   <div id="importModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="glass-card p-6 rounded-2xl w-full max-w-md">
       <h3 class="text-xl font-bold gradient-text mb-4">📥 Importar Personal</h3>
@@ -172,7 +170,6 @@
     </div>
   </div>
 
-  <!-- Import Llaves -->
   <div id="importLlavesModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="glass-card p-6 rounded-2xl w-full max-w-md">
       <h3 class="text-xl font-bold gradient-text mb-4">📥 Importar Llaves</h3>
@@ -186,7 +183,6 @@
     </div>
   </div>
 
-  <!-- Import Vehiculos -->
   <div id="importVehiculosModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="glass-card p-6 rounded-2xl w-full max-w-md">
       <h3 class="text-xl font-bold gradient-text mb-4">📥 Importar Vehículos</h3>
@@ -205,7 +201,7 @@
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, collection, addDoc, updateDoc, doc, query, where, onSnapshot, serverTimestamp, getDocs, writeBatch, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // ⚠️ PEGA TU CONFIG DE FIREBASE AQUÍ
+    // ⚠️ REEMPLAZA ESTO CON TU CONFIG DE FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyAVT8XCk0Ji-sgENTImSsmGE1UO2i7vBkA",
       authDomain: "regwork-19628.firebaseapp.com",
@@ -241,7 +237,6 @@
       let elId = 'formMsg';
       if(currentFilter === 'Llaves') elId = 'formMsgLlaves';
       else if(currentFilter === 'Vehiculos') elId = 'formMsgVehiculos';
-      
       const el = document.getElementById(elId);
       el.textContent = text; el.className = `text-sm mt-3 p-3 rounded-lg ${type==='error'?'bg-red-950/50 text-red-400 border border-red-500/30':'bg-green-950/50 text-green-400 border border-green-500/30'}`;
       el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000);
@@ -259,6 +254,7 @@
         document.getElementById('dashboardView').classList.add('hidden');
       }
     });
+
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       try { await signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value); document.getElementById('loginError').classList.add('hidden'); } 
@@ -269,6 +265,7 @@
         document.getElementById('loginError').textContent = msg; document.getElementById('loginError').classList.remove('hidden');
       }
     });
+
     document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
     window.setFilter = function(filter) {
@@ -277,15 +274,12 @@
         const btn = document.getElementById('tab-'+f);
         if(btn){ btn.classList.toggle('tab-active', f===filter); btn.classList.toggle('tab-inactive', f!==filter); }
       });
-      
       document.getElementById('formEmpleados').classList.toggle('hidden', filter==='Llaves' || filter==='Vehiculos');
       document.getElementById('formLlaves').classList.toggle('hidden', filter!=='Llaves');
       document.getElementById('formVehiculos').classList.toggle('hidden', filter!=='Vehiculos');
-      
-      if(filter==='Llaves') document.getElementById('mainTitle').textContent = ' Control de Llaves';
+      if(filter==='Llaves') document.getElementById('mainTitle').textContent = '🔑 Control de Llaves';
       else if(filter==='Vehiculos') document.getElementById('mainTitle').textContent = '🚗 Registro de Vehículos';
-      else document.getElementById('mainTitle').textContent = ' Registro Diario';
-      
+      else document.getElementById('mainTitle').textContent = '📋 Registro Diario';
       updateTableHeaders();
       loadToday();
     };
@@ -314,7 +308,7 @@
         onSnapshot(q, snap => {
           todayVehicles = []; snap.forEach(d => todayVehicles.push({id:d.id, ...d.data()}));
           todayVehicles.sort((a,b) => (b.entrada?.seconds||0) - (a.entrada?.seconds||0));
-          loadVehiclesDropdown(); renderVehiclesTable();
+          renderVehiclesTable();
         });
       } else {
         const q = query(collection(db, 'registros'), where('uid','==',currentUser.uid), where('fecha','==',getTodayStr()));
@@ -326,7 +320,6 @@
       }
     }
 
-    // RENDER EMPLEADOS
     function renderEmpleadosTable() {
       const tbody = document.getElementById('tableBody');
       const filtered = currentFilter==='todos' ? todayRecords : todayRecords.filter(r=>r.tipo===currentFilter);
@@ -334,12 +327,11 @@
       tbody.innerHTML = filtered.map(r => {
         const badgeClass = r.tipo==='ETT' ? 'badge-ett' : 'badge-externos';
         const rowClass = !r.salida ? 'table-row-active' : 'hover:bg-slate-800/30';
-        const actionBtn = !r.salida ? `<button onclick="window.quickCheckout('${r.dni}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition mx-auto"> Salida</button>` : `<span class="text-slate-600 text-xs">Completado</span>`;
+        const actionBtn = !r.salida ? `<button onclick="window.quickCheckout('${r.dni}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition mx-auto">🟠 Salida</button>` : `<span class="text-slate-600 text-xs">Completado</span>`;
         return `<tr class="${rowClass} transition-all"><td class="p-4"><span class="px-2 py-1 text-xs rounded-full ${badgeClass}">${r.tipo}</span></td><td class="p-4 font-medium">${r.nombre||'-'}</td><td class="p-4 font-mono text-xs text-slate-400">${r.dni}</td><td class="p-4 text-cyan-400">${fmtDate(r.entrada)}</td><td class="p-4 text-slate-400">${fmtDate(r.salida)}</td><td class="p-4">${calcDuration(r.entrada, r.salida)}</td><td class="p-4 text-slate-400">${r.depto||'-'}</td><td class="p-4 text-slate-500 text-xs max-w-xs truncate">${r.observaciones||'-'}</td><td class="p-4">${actionBtn}</td></tr>`;
       }).join('');
     }
 
-    // RENDER LLAVES
     function loadKeysDropdown() {
       const select = document.getElementById('llaveSelect');
       select.innerHTML = '<option value="">Seleccionar Llave...</option>';
@@ -349,6 +341,7 @@
         select.appendChild(opt);
       });
     }
+
     function renderKeysTable() {
       const tbody = document.getElementById('tableBody');
       if(!todayKeys.length) { tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-slate-500">Sin movimientos hoy</td></tr>'; return; }
@@ -359,22 +352,12 @@
       }).join('');
     }
 
-    // RENDER VEHICULOS
-    function loadVehiclesDropdown() {
-      const select = document.getElementById('matriculaSelect');
-      select.innerHTML = '<option value="">Seleccionar Matrícula...</option>';
-      Object.entries(vehiclesMap).forEach(([mat, data]) => {
-        const opt = document.createElement('option');
-        opt.value = mat; opt.textContent = `${mat} - ${data.empresa}`;
-        select.appendChild(opt);
-      });
-    }
     function renderVehiclesTable() {
       const tbody = document.getElementById('tableBody');
       if(!todayVehicles.length) { tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-slate-500">Sin vehículos hoy</td></tr>'; return; }
       tbody.innerHTML = todayVehicles.map(v => {
         const rowClass = !v.salida ? 'table-row-active' : 'hover:bg-slate-800/30';
-        const actionBtn = !v.salida ? `<button onclick="window.quickCheckoutVehicle('${v.matricula}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition mx-auto"> Salida</button>` : `<span class="text-slate-600 text-xs">Fuera</span>`;
+        const actionBtn = !v.salida ? `<button onclick="window.quickCheckoutVehicle('${v.matricula}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition mx-auto">🟠 Salida</button>` : `<span class="text-slate-600 text-xs">Fuera</span>`;
         return `<tr class="${rowClass} transition-all"><td class="p-4 font-mono text-cyan-400 text-lg">${v.matricula}</td><td class="p-4">${v.empresa||'-'}</td><td class="p-4 text-cyan-400">${fmtDate(v.entrada)}</td><td class="p-4 text-slate-400">${fmtDate(v.salida)}</td><td class="p-4">${calcDuration(v.entrada, v.salida)}</td><td class="p-4"><span class="px-2 py-1 text-xs rounded-full ${!v.salida?'badge-prestada':'bg-slate-700 text-slate-400'}">${!v.salida?'Dentro':'Fuera'}</span></td><td class="p-4 text-slate-500 text-xs max-w-xs truncate">${v.observaciones||'-'}</td><td class="p-4">${actionBtn}</td></tr>`;
       }).join('');
     }
@@ -386,21 +369,25 @@
       try { await updateDoc(doc(db,'registros',active.id), {salida:serverTimestamp(), estado:'finalizado'}); showMessage('✅ Salida registrada'); } 
       catch(e) { showMessage('Error','error'); }
     };
+
     document.getElementById('dni').addEventListener('blur', async (e) => {
       const dni = e.target.value.trim().toUpperCase(); if(!/^[0-9]{8}[A-Z]$/.test(dni)) return;
       try { const snap = await getDoc(doc(db,'empleados',dni)); if(snap.exists()) { const d=snap.data(); document.getElementById('nombre').value=d.nombre||''; document.getElementById('tipo').value=d.tipo||'ETT'; document.getElementById('depto').value=d.depto||''; showMessage('✅ Datos auto-completados'); } } catch(err){}
     });
+
     document.getElementById('btnEntrada').addEventListener('click', async () => {
       const dni = document.getElementById('dni').value.trim().toUpperCase(); if(!/^[0-9]{8}[A-Z]$/.test(dni)) { showMessage('DNI no válido','error'); return; }
       try { await addDoc(collection(db,'registros'), { uid:currentUser.uid, tipo:document.getElementById('tipo').value, dni, nombre:document.getElementById('nombre').value.trim(), depto:document.getElementById('depto').value.trim(), observaciones:document.getElementById('obs').value.trim(), fecha:getTodayStr(), entrada:serverTimestamp(), estado:'activo' }); showMessage('✅ Entrada registrada'); ['dni','nombre','depto','obs'].forEach(id=>document.getElementById(id).value=''); } 
       catch(e) { showMessage('Error','error'); }
     });
+
     document.getElementById('btnSalida').addEventListener('click', async () => {
       const dni = document.getElementById('dni').value.trim().toUpperCase(); const active = todayRecords.find(r=>r.dni===dni && !r.salida);
       if(!active) { showMessage('No hay entrada activa','error'); return; }
       try { await updateDoc(doc(db,'registros',active.id), {salida:serverTimestamp(), estado:'finalizado'}); showMessage('✅ Salida registrada'); document.getElementById('dni').value=''; } 
       catch(e) { showMessage('Error','error'); }
     });
+
     document.getElementById('btnGuardarEmpleado').addEventListener('click', async () => {
       const dni=document.getElementById('dni').value.trim().toUpperCase(), nombre=document.getElementById('nombre').value.trim(), depto=document.getElementById('depto').value.trim(), tipo=document.getElementById('tipo').value;
       if(!/^[0-9]{8}[A-Z]$/.test(dni)||!nombre) { showMessage('DNI o Nombre faltantes','error'); return; }
@@ -412,6 +399,7 @@
       const snap = await getDocs(collection(db,'llaves'));
       keysMap = {}; snap.forEach(d => keysMap[d.id] = d.data());
     }
+
     window.returnKey = async (logId, keyNum) => {
       try {
         await updateDoc(doc(db,'registro_llaves',logId), {horaEntrega:serverTimestamp(), estado:'finalizada'});
@@ -419,6 +407,7 @@
         keysMap[keyNum].estado = 'disponible'; loadKeysDropdown(); showMessage('✅ Llave devuelta');
       } catch(e) { showMessage('Error al devolver','error'); }
     };
+
     document.getElementById('btnRetirar').addEventListener('click', async () => {
       const keyNum = document.getElementById('llaveSelect').value;
       const persona = document.getElementById('personaLlave').value.trim();
@@ -431,6 +420,7 @@
         showMessage('✅ Llave retirada'); document.getElementById('personaLlave').value=''; document.getElementById('obsLlave').value='';
       } catch(e) { showMessage('Error','error'); }
     });
+
     document.getElementById('btnEntregar').addEventListener('click', async () => {
       const keyNum = document.getElementById('llaveSelect').value;
       if(!keyNum) { showMessage('Selecciona una llave','error'); return; }
@@ -439,21 +429,18 @@
       window.returnKey(activeLog.id, keyNum);
     });
 
-        // ACTIONS VEHICULOS
+    // ACTIONS VEHICULOS
     async function loadVehiclesMaster() {
       const snap = await getDocs(collection(db,'vehiculos'));
       vehiclesMap = {}; snap.forEach(d => vehiclesMap[d.id] = d.data());
     }
-    
-    // Autocompletar matrícula (igual que DNI)
+
     document.getElementById('matriculaInput').addEventListener('blur', async (e) => {
       const mat = e.target.value.trim().toUpperCase();
       if(!mat || mat.length < 5) return;
-      
       try {
         const docRef = doc(db,'vehiculos',mat);
         const docSnap = await getDoc(docRef);
-        
         if(docSnap.exists()) {
           const veh = docSnap.data();
           document.getElementById('empresaVehiculo').value = veh.empresa || '';
@@ -461,7 +448,7 @@
         }
       } catch(err) { console.error('Error:', err); }
     });
-    
+
     window.quickCheckoutVehicle = async (mat) => {
       const active = todayVehicles.find(v=>v.matricula===mat && !v.salida);
       if(!active) { showMessage('No hay entrada activa','error'); return; }
@@ -472,17 +459,10 @@
     document.getElementById('btnEntradaVehiculo').addEventListener('click', async () => {
       let mat = document.getElementById('matriculaInput').value.trim().toUpperCase();
       if(!mat) { showMessage('Escribe la matrícula','error'); return; }
-      // Formato simple check
       mat = mat.replace(/[^A-Z0-9]/g, '');
       if(mat.length < 5) { showMessage('Formato matrícula incorrecto','error'); return; }
-
       try {
-        await addDoc(collection(db,'registro_vehiculos'), { 
-          uid:currentUser.uid, matricula:mat, 
-          empresa:document.getElementById('empresaVehiculo').value.trim(), 
-          observaciones:document.getElementById('obsVehiculo').value.trim(), 
-          fecha:getTodayStr(), entrada:serverTimestamp(), estado:'activo' 
-        });
+        await addDoc(collection(db,'registro_vehiculos'), { uid:currentUser.uid, matricula:mat, empresa:document.getElementById('empresaVehiculo').value.trim(), observaciones:document.getElementById('obsVehiculo').value.trim(), fecha:getTodayStr(), entrada:serverTimestamp(), estado:'activo' });
         showMessage('✅ Entrada vehículo registrada'); 
         ['matriculaInput','empresaVehiculo','obsVehiculo'].forEach(id=>document.getElementById(id).value='');
       } catch(e) { showMessage('Error','error'); }
@@ -505,7 +485,7 @@
       try { await setDoc(doc(db,'vehiculos',mat), {matricula:mat, empresa:emp}); showMessage(`✅ Vehículo guardado`); } catch(e){ showMessage('Error','error'); }
     });
 
-    // EXPORT GENERAL
+    // EXPORT
     document.getElementById('btnExport').addEventListener('click', () => {
       if(currentFilter === 'Llaves') {
         const data = todayKeys.map(k => ({ "Nº": k.llaveNumero, "Nombre": k.llaveNombre, "Persona": k.persona, "Retiro": fmtDate(k.horaRetiro), "Entrega": fmtDate(k.horaEntrega), "Duración": k.horaEntrega ? calcDuration(k.horaRetiro, k.horaEntrega).replace(/<[^>]*>/g,'') : '-', "Estado": k.estado==='activa'?'Prestada':'Devuelta' }));
@@ -520,7 +500,7 @@
       }
     });
 
-    // IMPORTS
+    // IMPORT PERSONAL
     document.getElementById('btnImport').addEventListener('click', () => document.getElementById('importModal').classList.remove('hidden'));
     document.getElementById('btnProcessImport').addEventListener('click', async () => {
       const file = document.getElementById('csvFile').files[0]; if(!file) return alert('Selecciona archivo');
@@ -546,6 +526,7 @@
       }; reader.readAsBinaryString(file);
     });
 
+    // IMPORT LLAVES
     document.getElementById('btnImportLlaves').addEventListener('click', () => document.getElementById('importLlavesModal').classList.remove('hidden'));
     document.getElementById('btnProcessImportLlaves').addEventListener('click', async () => {
       const file = document.getElementById('csvFileLlaves').files[0]; if(!file) return alert('Selecciona archivo');
@@ -577,15 +558,14 @@
       }; reader.readAsText(file, 'UTF-8');
     });
 
+    // IMPORT VEHICULOS
     document.getElementById('btnImportVehiculos').addEventListener('click', () => document.getElementById('importVehiculosModal').classList.remove('hidden'));
     document.getElementById('btnProcessImportVehiculos').addEventListener('click', async () => {
       const file = document.getElementById('csvFileVehiculos').files[0]; 
       if(!file) return alert('Selecciona archivo');
-      
       const status = document.getElementById('importStatusVehiculos'); 
       status.classList.remove('hidden'); 
       status.textContent = 'Leyendo archivo...';
-      
       const reader = new FileReader();
       reader.onload = async (e) => {
         try {
@@ -593,27 +573,21 @@
           const separator = text.includes(';') ? ';' : ',';
           const lines = text.split(/\r\n|\n/).filter(line => line.trim() !== '');
           if (lines.length < 2) throw new Error('Archivo vacío');
-          
           const headers = lines[0].split(separator).map(h => h.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
           const idxMat = headers.findIndex(h => h.includes('matricula') || h.includes('mat'));
           const idxEmp = headers.findIndex(h => h.includes('empresa'));
-          
           if (idxMat === -1) throw new Error('Falta columna Matrícula');
-          
           status.textContent = `Procesando ${lines.length - 1} vehículos...`;
           let batch = writeBatch(db); let count = 0;
-          
           for (let i = 1; i < lines.length; i++) {
             const cols = lines[i].split(separator); if (!cols || cols.length === 0) continue;
             const mat = cols[idxMat] ? cols[idxMat].trim().toUpperCase() : ''; if (!mat) continue;
             const empresa = idxEmp !== -1 && cols[idxEmp] ? cols[idxEmp].trim() : '';
-            
             batch.set(doc(db, 'vehiculos', mat), { matricula: mat, empresa: empresa });
             count++; if (count % 450 === 0) { await batch.commit(); batch = writeBatch(db); }
           }
           if (count % 450 !== 0 && count > 0) await batch.commit();
-          await loadVehiclesMaster(); loadVehiclesDropdown();
-          
+          await loadVehiclesMaster();
           status.textContent = `✅ ${count} vehículos importados`; 
           setTimeout(() => document.getElementById('importVehiculosModal').classList.add('hidden'), 2000);
         } catch (err) { status.textContent = '❌ ' + err.message; status.classList.add('text-red-400'); }
@@ -621,7 +595,7 @@
       reader.readAsText(file, 'UTF-8');
     });
 
-    // INICIALIZACIÓN
+    // INIT
     loadKeysMaster();
     loadVehiclesMaster();
   </script>
