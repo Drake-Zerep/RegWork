@@ -52,7 +52,7 @@
     <form id="loginForm" class="glass-card p-8 rounded-2xl w-full max-w-md space-y-6 relative z-10">
       <div class="text-center">
         <h2 class="text-3xl font-bold gradient-text neon-text mb-2">Acceso Registro</h2>
-        <p class="text-slate-400 text-sm">Sistema de Control de Personal</p>
+        <p class="text-slate-400 text-sm">Sistema de Control de Personal y Vehículos</p>
       </div>
       <div class="space-y-4">
         <input type="email" id="email" placeholder="Email" required class="input-field w-full p-3 rounded-lg">
@@ -79,6 +79,7 @@
       <button id="tab-ETT" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('ETT')">💼 ETT</button>
       <button id="tab-Externos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Externos')">🌐 Externos</button>
       <button id="tab-Llaves" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Llaves')">🔑 Llaves</button>
+      <button id="tab-Vehiculos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Vehiculos')">🚗 Vehículos</button>
     </div>
 
     <!-- FORM EMPLEADOS -->
@@ -119,6 +120,25 @@
       <p id="formMsgLlaves" class="text-sm mt-3 hidden"></p>
     </div>
 
+    <!-- FORM VEHICULOS -->
+    <div id="formVehiculos" class="hidden glass-card p-6 rounded-xl mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <select id="matriculaSelect" class="input-field p-3 rounded-lg md:col-span-1 uppercase">
+          <option value="">Seleccionar Matrícula...</option>
+        </select>
+        <input id="matriculaInput" placeholder="Matrícula (0000AAA)" class="input-field p-3 rounded-lg uppercase">
+        <input id="empresaVehiculo" placeholder="Empresa" class="input-field p-3 rounded-lg">
+        <input id="obsVehiculo" placeholder="Observaciones" class="input-field p-3 rounded-lg">
+      </div>
+      <div class="flex gap-3 mt-4">
+        <button id="btnEntradaVehiculo" class="btn-primary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span>🟢</span> Entrada Vehículo</button>
+        <button id="btnSalidaVehiculo" class="btn-secondary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span></span> Salida Vehículo</button>
+        <button id="btnGuardarVehiculo" class="btn-db px-4 py-3 rounded-lg font-semibold text-white flex items-center gap-2 border border-purple-500/50">💾 Nuevo Vehículo</button>
+        <button id="btnImportVehiculos" class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition">📥 CSV Vehículos</button>
+      </div>
+      <p id="formMsgVehiculos" class="text-sm mt-3 hidden"></p>
+    </div>
+
     <!-- TABLE -->
     <div class="glass-card rounded-xl overflow-hidden flex-1">
       <div class="overflow-x-auto">
@@ -139,11 +159,13 @@
     </div>
   </div>
 
-  <!-- MODAL IMPORT PERSONAL -->
+  <!-- MODALES -->
+  
+  <!-- Import Personal -->
   <div id="importModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="glass-card p-6 rounded-2xl w-full max-w-md">
       <h3 class="text-xl font-bold gradient-text mb-4">📥 Importar Personal</h3>
-      <p class="text-slate-400 text-sm mb-4">CSV: DNI, Nombre, Departamento, Tipo (opcional)</p>
+      <p class="text-slate-400 text-sm mb-4">CSV: DNI, Nombre, Departamento, Tipo</p>
       <input type="file" id="csvFile" accept=".csv,.xlsx,.xls" class="block w-full text-sm mb-4 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary/20 file:text-primary hover:file:bg-primary/30">
       <div class="flex justify-end gap-3">
         <button onclick="document.getElementById('importModal').classList.add('hidden')" class="px-4 py-2 text-slate-400 hover:text-white transition">Cancelar</button>
@@ -153,17 +175,31 @@
     </div>
   </div>
 
-  <!-- MODAL IMPORT LLAVES -->
+  <!-- Import Llaves -->
   <div id="importLlavesModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="glass-card p-6 rounded-2xl w-full max-w-md">
       <h3 class="text-xl font-bold gradient-text mb-4">📥 Importar Llaves</h3>
-      <p class="text-slate-400 text-sm mb-4">CSV: Número, Nombre (Soporta acentos y punto y coma)</p>
+      <p class="text-slate-400 text-sm mb-4">CSV: Número, Nombre</p>
       <input type="file" id="csvFileLlaves" accept=".csv,.xlsx,.xls" class="block w-full text-sm mb-4 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary/20 file:text-primary hover:file:bg-primary/30">
       <div class="flex justify-end gap-3">
         <button onclick="document.getElementById('importLlavesModal').classList.add('hidden')" class="px-4 py-2 text-slate-400 hover:text-white transition">Cancelar</button>
         <button id="btnProcessImportLlaves" class="px-6 py-2 btn-primary rounded-lg font-semibold">Procesar</button>
       </div>
       <p id="importStatusLlaves" class="text-sm mt-3 text-center hidden"></p>
+    </div>
+  </div>
+
+  <!-- Import Vehiculos -->
+  <div id="importVehiculosModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="glass-card p-6 rounded-2xl w-full max-w-md">
+      <h3 class="text-xl font-bold gradient-text mb-4">📥 Importar Vehículos</h3>
+      <p class="text-slate-400 text-sm mb-4">CSV: Matrícula, Empresa</p>
+      <input type="file" id="csvFileVehiculos" accept=".csv,.xlsx,.xls" class="block w-full text-sm mb-4 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary/20 file:text-primary hover:file:bg-primary/30">
+      <div class="flex justify-end gap-3">
+        <button onclick="document.getElementById('importVehiculosModal').classList.add('hidden')" class="px-4 py-2 text-slate-400 hover:text-white transition">Cancelar</button>
+        <button id="btnProcessImportVehiculos" class="px-6 py-2 btn-primary rounded-lg font-semibold">Procesar</button>
+      </div>
+      <p id="importStatusVehiculos" class="text-sm mt-3 text-center hidden"></p>
     </div>
   </div>
 
@@ -189,8 +225,10 @@
     let currentUser = null;
     let todayRecords = [];
     let todayKeys = [];
+    let todayVehicles = [];
     let currentFilter = 'todos';
     let keysMap = {}; 
+    let vehiclesMap = {}; 
 
     document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -203,7 +241,11 @@
     }
     function getTodayStr() { return new Date().toISOString().split('T')[0]; }
     function showMessage(text, type='info') {
-      const el = document.getElementById(currentFilter === 'Llaves' ? 'formMsgLlaves' : 'formMsg');
+      let elId = 'formMsg';
+      if(currentFilter === 'Llaves') elId = 'formMsgLlaves';
+      else if(currentFilter === 'Vehiculos') elId = 'formMsgVehiculos';
+      
+      const el = document.getElementById(elId);
       el.textContent = text; el.className = `text-sm mt-3 p-3 rounded-lg ${type==='error'?'bg-red-950/50 text-red-400 border border-red-500/30':'bg-green-950/50 text-green-400 border border-green-500/30'}`;
       el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000);
     }
@@ -234,13 +276,19 @@
 
     window.setFilter = function(filter) {
       currentFilter = filter;
-      ['todos','ETT','Externos','Llaves'].forEach(f => {
+      ['todos','ETT','Externos','Llaves','Vehiculos'].forEach(f => {
         const btn = document.getElementById('tab-'+f);
         if(btn){ btn.classList.toggle('tab-active', f===filter); btn.classList.toggle('tab-inactive', f!==filter); }
       });
-      document.getElementById('formEmpleados').classList.toggle('hidden', filter==='Llaves');
+      
+      document.getElementById('formEmpleados').classList.toggle('hidden', filter==='Llaves' || filter==='Vehiculos');
       document.getElementById('formLlaves').classList.toggle('hidden', filter!=='Llaves');
-      document.getElementById('mainTitle').textContent = filter==='Llaves' ? ' Control de Llaves' : '📋 Registro Diario';
+      document.getElementById('formVehiculos').classList.toggle('hidden', filter!=='Vehiculos');
+      
+      if(filter==='Llaves') document.getElementById('mainTitle').textContent = ' Control de Llaves';
+      else if(filter==='Vehiculos') document.getElementById('mainTitle').textContent = '🚗 Registro de Vehículos';
+      else document.getElementById('mainTitle').textContent = ' Registro Diario';
+      
       updateTableHeaders();
       loadToday();
     };
@@ -248,7 +296,9 @@
     function updateTableHeaders() {
       const head = document.getElementById('tableHead');
       if(currentFilter === 'Llaves') {
-        head.innerHTML = `<tr><th class="p-4 text-left">Nº Llave</th><th class="p-4 text-left">Nombre Llave</th><th class="p-4 text-left">Persona</th><th class="p-4 text-left">Retiro</th><th class="p-4 text-left">Entrega</th><th class="p-4 text-left">Duración</th><th class="p-4 text-left">Estado</th><th class="p-4 text-center">Acción</th></tr>`;
+        head.innerHTML = `<tr><th class="p-4 text-left">Nº</th><th class="p-4 text-left">Nombre</th><th class="p-4 text-left">Persona</th><th class="p-4 text-left">Retiro</th><th class="p-4 text-left">Entrega</th><th class="p-4 text-left">Duración</th><th class="p-4 text-left">Estado</th><th class="p-4 text-center">Acción</th></tr>`;
+      } else if(currentFilter === 'Vehiculos') {
+        head.innerHTML = `<tr><th class="p-4 text-left">Matrícula</th><th class="p-4 text-left">Empresa</th><th class="p-4 text-left">Entrada</th><th class="p-4 text-left">Salida</th><th class="p-4 text-left">Duración</th><th class="p-4 text-left">Estado</th><th class="p-4 text-left">Obs.</th><th class="p-4 text-center">Acción</th></tr>`;
       } else {
         head.innerHTML = `<tr><th class="p-4 text-left">Tipo</th><th class="p-4 text-left">Nombre</th><th class="p-4 text-left">DNI</th><th class="p-4 text-left">Entrada</th><th class="p-4 text-left">Salida</th><th class="p-4 text-left">Total</th><th class="p-4 text-left">Depto.</th><th class="p-4 text-left">Obs.</th><th class="p-4 text-center">Acción</th></tr>`;
       }
@@ -262,6 +312,13 @@
           todayKeys.sort((a,b) => (b.horaRetiro?.seconds||0) - (a.horaRetiro?.seconds||0));
           loadKeysDropdown(); renderKeysTable();
         });
+      } else if(currentFilter === 'Vehiculos') {
+        const q = query(collection(db, 'registro_vehiculos'), where('uid','==',currentUser.uid), where('fecha','==',getTodayStr()));
+        onSnapshot(q, snap => {
+          todayVehicles = []; snap.forEach(d => todayVehicles.push({id:d.id, ...d.data()}));
+          todayVehicles.sort((a,b) => (b.entrada?.seconds||0) - (a.entrada?.seconds||0));
+          loadVehiclesDropdown(); renderVehiclesTable();
+        });
       } else {
         const q = query(collection(db, 'registros'), where('uid','==',currentUser.uid), where('fecha','==',getTodayStr()));
         onSnapshot(q, snap => {
@@ -272,6 +329,7 @@
       }
     }
 
+    // RENDER EMPLEADOS
     function renderEmpleadosTable() {
       const tbody = document.getElementById('tableBody');
       const filtered = currentFilter==='todos' ? todayRecords : todayRecords.filter(r=>r.tipo===currentFilter);
@@ -284,6 +342,7 @@
       }).join('');
     }
 
+    // RENDER LLAVES
     function loadKeysDropdown() {
       const select = document.getElementById('llaveSelect');
       select.innerHTML = '<option value="">Seleccionar Llave...</option>';
@@ -303,6 +362,27 @@
       }).join('');
     }
 
+    // RENDER VEHICULOS
+    function loadVehiclesDropdown() {
+      const select = document.getElementById('matriculaSelect');
+      select.innerHTML = '<option value="">Seleccionar Matrícula...</option>';
+      Object.entries(vehiclesMap).forEach(([mat, data]) => {
+        const opt = document.createElement('option');
+        opt.value = mat; opt.textContent = `${mat} - ${data.empresa}`;
+        select.appendChild(opt);
+      });
+    }
+    function renderVehiclesTable() {
+      const tbody = document.getElementById('tableBody');
+      if(!todayVehicles.length) { tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-slate-500">Sin vehículos hoy</td></tr>'; return; }
+      tbody.innerHTML = todayVehicles.map(v => {
+        const rowClass = !v.salida ? 'table-row-active' : 'hover:bg-slate-800/30';
+        const actionBtn = !v.salida ? `<button onclick="window.quickCheckoutVehicle('${v.matricula}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition mx-auto"> Salida</button>` : `<span class="text-slate-600 text-xs">Fuera</span>`;
+        return `<tr class="${rowClass} transition-all"><td class="p-4 font-mono text-cyan-400 text-lg">${v.matricula}</td><td class="p-4">${v.empresa||'-'}</td><td class="p-4 text-cyan-400">${fmtDate(v.entrada)}</td><td class="p-4 text-slate-400">${fmtDate(v.salida)}</td><td class="p-4">${calcDuration(v.entrada, v.salida)}</td><td class="p-4"><span class="px-2 py-1 text-xs rounded-full ${!v.salida?'badge-prestada':'bg-slate-700 text-slate-400'}">${!v.salida?'Dentro':'Fuera'}</span></td><td class="p-4 text-slate-500 text-xs max-w-xs truncate">${v.observaciones||'-'}</td><td class="p-4">${actionBtn}</td></tr>`;
+      }).join('');
+    }
+
+    // ACTIONS EMPLEADOS
     window.quickCheckout = async (dni) => {
       const active = todayRecords.find(r=>r.dni===dni && !r.salida);
       if(!active) { showMessage('No hay entrada activa','error'); return; }
@@ -330,6 +410,7 @@
       try { await setDoc(doc(db,'empleados',dni), {dni,nombre,depto,tipo,fechaAlta:serverTimestamp()}); showMessage(`✅ ${nombre} guardado`); } catch(e){ showMessage('Error','error'); }
     });
 
+    // ACTIONS LLAVES
     async function loadKeysMaster() {
       const snap = await getDocs(collection(db,'llaves'));
       keysMap = {}; snap.forEach(d => keysMap[d.id] = d.data());
@@ -361,17 +442,78 @@
       window.returnKey(activeLog.id, keyNum);
     });
 
+    // ACTIONS VEHICULOS
+    async function loadVehiclesMaster() {
+      const snap = await getDocs(collection(db,'vehiculos'));
+      vehiclesMap = {}; snap.forEach(d => vehiclesMap[d.id] = d.data());
+    }
+    document.getElementById('matriculaSelect').addEventListener('change', (e) => {
+      const val = e.target.value;
+      if(vehiclesMap[val]) {
+        document.getElementById('matriculaInput').value = val;
+        document.getElementById('empresaVehiculo').value = vehiclesMap[val].empresa || '';
+      }
+    });
+    
+    window.quickCheckoutVehicle = async (mat) => {
+      const active = todayVehicles.find(v=>v.matricula===mat && !v.salida);
+      if(!active) { showMessage('No hay entrada activa','error'); return; }
+      try { await updateDoc(doc(db,'registro_vehiculos',active.id), {salida:serverTimestamp(), estado:'finalizado'}); showMessage('✅ Salida registrada'); } 
+      catch(e) { showMessage('Error','error'); }
+    };
+
+    document.getElementById('btnEntradaVehiculo').addEventListener('click', async () => {
+      let mat = document.getElementById('matriculaSelect').value || document.getElementById('matriculaInput').value.trim().toUpperCase();
+      if(!mat) { showMessage('Selecciona o escribe matrícula','error'); return; }
+      // Formato simple check
+      mat = mat.replace(/[^A-Z0-9]/g, '');
+      if(mat.length < 5) { showMessage('Formato matrícula incorrecto','error'); return; }
+
+      try {
+        await addDoc(collection(db,'registro_vehiculos'), { 
+          uid:currentUser.uid, matricula:mat, 
+          empresa:document.getElementById('empresaVehiculo').value.trim(), 
+          observaciones:document.getElementById('obsVehiculo').value.trim(), 
+          fecha:getTodayStr(), entrada:serverTimestamp(), estado:'activo' 
+        });
+        showMessage('✅ Entrada vehículo registrada'); 
+        ['matriculaSelect','matriculaInput','empresaVehiculo','obsVehiculo'].forEach(id=>document.getElementById(id).value='');
+      } catch(e) { showMessage('Error','error'); }
+    });
+
+    document.getElementById('btnSalidaVehiculo').addEventListener('click', async () => {
+      let mat = document.getElementById('matriculaSelect').value || document.getElementById('matriculaInput').value.trim().toUpperCase();
+      if(!mat) { showMessage('Matrícula vacía','error'); return; }
+      mat = mat.replace(/[^A-Z0-9]/g, '');
+      const active = todayVehicles.find(v=>v.matricula===mat && !v.salida);
+      if(!active) { showMessage('No hay entrada activa para esta matrícula','error'); return; }
+      try { await updateDoc(doc(db,'registro_vehiculos',active.id), {salida:serverTimestamp(), estado:'finalizado'}); showMessage('✅ Salida vehículo registrada'); document.getElementById('matriculaInput').value=''; document.getElementById('matriculaSelect').value=''; } 
+      catch(e) { showMessage('Error','error'); }
+    });
+
+    document.getElementById('btnGuardarVehiculo').addEventListener('click', async () => {
+      const mat = document.getElementById('matriculaSelect').value || document.getElementById('matriculaInput').value.trim().toUpperCase();
+      const emp = document.getElementById('empresaVehiculo').value.trim();
+      if(!mat || !emp) { showMessage('Matrícula y Empresa requeridas','error'); return; }
+      try { await setDoc(doc(db,'vehiculos',mat), {matricula:mat, empresa:emp}); showMessage(`✅ Vehículo guardado`); } catch(e){ showMessage('Error','error'); }
+    });
+
+    // EXPORT GENERAL
     document.getElementById('btnExport').addEventListener('click', () => {
       if(currentFilter === 'Llaves') {
-        const data = todayKeys.map(k => ({ "Nº Llave": k.llaveNumero, "Nombre Llave": k.llaveNombre, "Persona": k.persona, "Hora Retiro": fmtDate(k.horaRetiro), "Hora Entrega": fmtDate(k.horaEntrega), "Duración": k.horaEntrega ? calcDuration(k.horaRetiro, k.horaEntrega).replace(/<[^>]*>/g,'') : '-', "Estado": k.estado==='activa'?'Prestada':'Devuelta' }));
+        const data = todayKeys.map(k => ({ "Nº": k.llaveNumero, "Nombre": k.llaveNombre, "Persona": k.persona, "Retiro": fmtDate(k.horaRetiro), "Entrega": fmtDate(k.horaEntrega), "Duración": k.horaEntrega ? calcDuration(k.horaRetiro, k.horaEntrega).replace(/<[^>]*>/g,'') : '-', "Estado": k.estado==='activa'?'Prestada':'Devuelta' }));
         const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Llaves'); XLSX.writeFile(wb, `Llaves_${getTodayStr()}.xlsx`);
+      } else if(currentFilter === 'Vehiculos') {
+        const data = todayVehicles.map(v => ({ "Matrícula": v.matricula, "Empresa": v.empresa, "Entrada": fmtDate(v.entrada), "Salida": fmtDate(v.salida), "Duración": v.salida ? calcDuration(v.entrada, v.salida).replace(/<[^>]*>/g,'') : '-', "Obs": v.observaciones || '' }));
+        const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Vehiculos'); XLSX.writeFile(wb, `Vehiculos_${getTodayStr()}.xlsx`);
       } else {
         const filtered = currentFilter==='todos' ? todayRecords : todayRecords.filter(r=>r.tipo===currentFilter);
-        const data = filtered.map(r => ({ "Tipo":r.tipo, "Nombre":r.nombre||'', "DNI":r.dni, "Fecha":r.fecha, "Entrada":fmtDate(r.entrada), "Salida":fmtDate(r.salida), "Total":r.salida?calcDuration(r.entrada,r.salida).replace(/<[^>]*>/g,''):'-', "Depto":r.depto||'', "Obs":r.observaciones||'' }));
+        const data = filtered.map(r => ({ "Tipo":r.tipo, "Nombre":r.nombre||'', "DNI":r.dni, "Entrada":fmtDate(r.entrada), "Salida":fmtDate(r.salida), "Total":r.salida?calcDuration(r.entrada,r.salida).replace(/<[^>]*>/g,''):'-', "Depto":r.depto||'', "Obs":r.observaciones||'' }));
         const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Personal'); XLSX.writeFile(wb, `Personal_${getTodayStr()}.xlsx`);
       }
     });
 
+    // IMPORTS
     document.getElementById('btnImport').addEventListener('click', () => document.getElementById('importModal').classList.remove('hidden'));
     document.getElementById('btnProcessImport').addEventListener('click', async () => {
       const file = document.getElementById('csvFile').files[0]; if(!file) return alert('Selecciona archivo');
@@ -397,13 +539,43 @@
       }; reader.readAsBinaryString(file);
     });
 
-    // IMPORT LLAVES - VERSIÓN ROBUSTA (Maneja acentos y punto y coma)
     document.getElementById('btnImportLlaves').addEventListener('click', () => document.getElementById('importLlavesModal').classList.remove('hidden'));
     document.getElementById('btnProcessImportLlaves').addEventListener('click', async () => {
-      const file = document.getElementById('csvFileLlaves').files[0]; 
-      if(!file) return alert('Selecciona un archivo CSV');
+      const file = document.getElementById('csvFileLlaves').files[0]; if(!file) return alert('Selecciona archivo');
+      const status = document.getElementById('importStatusLlaves'); status.classList.remove('hidden'); status.textContent='Leyendo...';
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const text = e.target.result; const separator = text.includes(';') ? ';' : ',';
+          const lines = text.split(/\r\n|\n/).filter(line => line.trim() !== '');
+          if (lines.length < 2) throw new Error('Archivo vacío');
+          const headers = lines[0].split(separator).map(h => h.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+          const idxNum = headers.findIndex(h => h.includes('numero') || h === 'n' || h === '#');
+          const idxNom = headers.findIndex(h => h.includes('nombre'));
+          if (idxNum === -1) throw new Error('No se encontró columna Número');
+          status.textContent = `Procesando ${lines.length - 1} llaves...`;
+          let batch = writeBatch(db); let count = 0;
+          for (let i = 1; i < lines.length; i++) {
+            const cols = lines[i].split(separator); if (!cols || cols.length === 0) continue;
+            const num = cols[idxNum] ? cols[idxNum].trim() : ''; if (!num) continue;
+            const nombre = idxNom !== -1 && cols[idxNom] ? cols[idxNom].trim() : '';
+            batch.set(doc(db, 'llaves', num), { numero: num, nombre: nombre, estado: 'disponible' });
+            count++; if (count % 450 === 0) { await batch.commit(); batch = writeBatch(db); }
+          }
+          if (count % 450 !== 0 && count > 0) await batch.commit();
+          await loadKeysMaster(); loadKeysDropdown();
+          status.textContent = `✅ ${count} llaves importadas`; status.classList.remove('text-red-400');
+          setTimeout(() => document.getElementById('importLlavesModal').classList.add('hidden'), 2000);
+        } catch (err) { status.textContent = '❌ ' + err.message; status.classList.add('text-red-400'); }
+      }; reader.readAsText(file, 'UTF-8');
+    });
+
+    document.getElementById('btnImportVehiculos').addEventListener('click', () => document.getElementById('importVehiculosModal').classList.remove('hidden'));
+    document.getElementById('btnProcessImportVehiculos').addEventListener('click', async () => {
+      const file = document.getElementById('csvFileVehiculos').files[0]; 
+      if(!file) return alert('Selecciona archivo');
       
-      const status = document.getElementById('importStatusLlaves'); 
+      const status = document.getElementById('importStatusVehiculos'); 
       status.classList.remove('hidden'); 
       status.textContent = 'Leyendo archivo...';
       
@@ -411,77 +583,40 @@
       reader.onload = async (e) => {
         try {
           const text = e.target.result;
-          
-          // 1. Detectar separador (coma o punto y coma)
           const separator = text.includes(';') ? ';' : ',';
-          
-          // 2. Dividir por líneas
           const lines = text.split(/\r\n|\n/).filter(line => line.trim() !== '');
-          if (lines.length < 2) throw new Error('El archivo está vacío');
+          if (lines.length < 2) throw new Error('Archivo vacío');
           
-          // 3. Procesar encabezados
-          const headersRaw = lines[0].split(separator);
-          // Normalizamos: minúsculas y sin acentos para asegurar match
-          const headers = headersRaw.map(h => 
-            h.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-          );
+          const headers = lines[0].split(separator).map(h => h.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+          const idxMat = headers.findIndex(h => h.includes('matricula') || h.includes('mat'));
+          const idxEmp = headers.findIndex(h => h.includes('empresa'));
           
-          // Buscar índices
-          const idxNum = headers.findIndex(h => h.includes('numero') || h === 'n' || h === '#');
-          const idxNom = headers.findIndex(h => h.includes('nombre'));
+          if (idxMat === -1) throw new Error('Falta columna Matrícula');
           
-          if (idxNum === -1) {
-            throw new Error('No se encontró la columna "Número". (Headers: ' + headersRaw.join(', ') + ')');
-          }
+          status.textContent = `Procesando ${lines.length - 1} vehículos...`;
+          let batch = writeBatch(db); let count = 0;
           
-          status.textContent = `Procesando ${lines.length - 1} llaves...`;
-          let batch = writeBatch(db);
-          let count = 0;
-          
-          // 4. Procesar datos
           for (let i = 1; i < lines.length; i++) {
-            const cols = lines[i].split(separator);
-            if (!cols || cols.length === 0) continue;
+            const cols = lines[i].split(separator); if (!cols || cols.length === 0) continue;
+            const mat = cols[idxMat] ? cols[idxMat].trim().toUpperCase() : ''; if (!mat) continue;
+            const empresa = idxEmp !== -1 && cols[idxEmp] ? cols[idxEmp].trim() : '';
             
-            const num = cols[idxNum] ? cols[idxNum].trim() : '';
-            if (!num) continue; // Saltar filas vacías
-            
-            const nombre = idxNom !== -1 && cols[idxNom] ? cols[idxNom].trim() : '';
-            
-            // Guardar en Firebase
-            batch.set(doc(db, 'llaves', num), { 
-              numero: num, 
-              nombre: nombre, 
-              estado: 'disponible' 
-            });
-            count++;
-            
-            if (count % 450 === 0) { 
-              await batch.commit(); 
-              batch = writeBatch(db); 
-            }
+            batch.set(doc(db, 'vehiculos', mat), { matricula: mat, empresa: empresa });
+            count++; if (count % 450 === 0) { await batch.commit(); batch = writeBatch(db); }
           }
-          
           if (count % 450 !== 0 && count > 0) await batch.commit();
+          await loadVehiclesMaster(); loadVehiclesDropdown();
           
-          // Recargar dropdown
-          await loadKeysMaster(); 
-          loadKeysDropdown();
-          
-          status.textContent = `✅ ${count} llaves importadas correctamente`; 
-          status.classList.remove('text-red-400');
-          setTimeout(() => document.getElementById('importLlavesModal').classList.add('hidden'), 2000);
-          
-        } catch (err) { 
-          console.error(err);
-          status.textContent = ' ' + err.message; 
-          status.classList.add('text-red-400'); 
-        }
+          status.textContent = `✅ ${count} vehículos importados`; 
+          setTimeout(() => document.getElementById('importVehiculosModal').classList.add('hidden'), 2000);
+        } catch (err) { status.textContent = '❌ ' + err.message; status.classList.add('text-red-400'); }
       };
       reader.readAsText(file, 'UTF-8');
     });
 
+    // INICIALIZACIÓN
     loadKeysMaster();
+    loadVehiclesMaster();
   </script>
 </body>
 </html>
