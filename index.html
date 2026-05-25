@@ -12,21 +12,11 @@
       theme: {
         extend: {
           colors: {
-            primary: '#06b6d4',
-            secondary: '#8b5cf6',
-            accent: '#f59e0b',
+            primary: '#06b6d4', // Cyan
+            secondary: '#8b5cf6', // Purple
+            accent: '#f59e0b', // Amber/Orange
             dark: '#0f172a',
             darker: '#020617',
-          },
-          animation: {
-            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            'glow': 'glow 2s ease-in-out infinite alternate',
-          },
-          keyframes: {
-            glow: {
-              '0%': { boxShadow: '0 0 5px #06b6d4, 0 0 10px #06b6d4' },
-              '100%': { boxShadow: '0 0 20px #06b6d4, 0 0 30px #06b6d4' },
-            }
           }
         }
       }
@@ -41,10 +31,10 @@
       background-attachment: fixed;
     }
     
+    /* Efecto Glassmorphism */
     .glass {
       background: rgba(15, 23, 42, 0.7);
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
@@ -59,10 +49,6 @@
       text-shadow: 0 0 10px rgba(6, 182, 212, 0.8), 0 0 20px rgba(6, 182, 212, 0.5);
     }
     
-    .neon-border {
-      box-shadow: 0 0 10px rgba(6, 182, 212, 0.5), inset 0 0 10px rgba(6, 182, 212, 0.2);
-    }
-    
     .gradient-text {
       background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%);
       -webkit-background-clip: text;
@@ -70,6 +56,7 @@
       background-clip: text;
     }
     
+    /* Tabs */
     .tab-active {
       background: linear-gradient(135deg, rgba(6, 182, 212, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
       border-bottom: 2px solid #06b6d4;
@@ -87,58 +74,49 @@
       background: rgba(6, 182, 212, 0.1);
     }
     
+    /* Botones */
     .btn-primary {
       background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
       box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
       transition: all 0.3s ease;
     }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(6, 182, 212, 0.6);
-    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(6, 182, 212, 0.6); }
     
     .btn-secondary {
       background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
       box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
       transition: all 0.3s ease;
     }
+    .btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6); }
     
-    .btn-secondary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6);
-    }
-    
+    /* Inputs */
     .input-field {
       background: rgba(15, 23, 42, 0.8);
       border: 1px solid rgba(6, 182, 212, 0.3);
       color: #e2e8f0;
       transition: all 0.3s ease;
     }
-    
     .input-field:focus {
       border-color: #06b6d4;
       box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
       outline: none;
     }
+    .input-field::placeholder { color: #64748b; }
     
-    .input-field::placeholder {
-      color: #64748b;
-    }
-    
+    /* Tabla */
     .table-row-active {
       background: linear-gradient(90deg, rgba(6, 182, 212, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
       border-left: 3px solid #06b6d4;
     }
     
     .badge-ett {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0.1) 100%);
+      background: rgba(139, 92, 246, 0.2);
       border: 1px solid rgba(139, 92, 246, 0.5);
       color: #a78bfa;
     }
     
     .badge-externos {
-      background: linear-gradient(135deg, rgba(6, 182, 212, 0.3) 0%, rgba(6, 182, 212, 0.1) 100%);
+      background: rgba(6, 182, 212, 0.2);
       border: 1px solid rgba(6, 182, 212, 0.5);
       color: #22d3ee;
     }
@@ -156,8 +134,8 @@
   <!-- LOGIN -->
   <div id="loginView" class="flex-1 flex items-center justify-center p-4">
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse-slow"></div>
-      <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
+      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
     </div>
     <form id="loginForm" class="glass-card p-8 rounded-2xl w-full max-w-md space-y-6 relative z-10">
       <div class="text-center">
@@ -165,13 +143,10 @@
         <p class="text-slate-400 text-sm">Sistema de Control de Personal</p>
       </div>
       <div class="space-y-4">
-        <input type="email" id="email" placeholder="Email" required 
-          class="input-field w-full p-3 rounded-lg">
-        <input type="password" id="password" placeholder="Contraseña" required 
-          class="input-field w-full p-3 rounded-lg">
+        <input type="email" id="email" placeholder="Email" required class="input-field w-full p-3 rounded-lg">
+        <input type="password" id="password" placeholder="Contraseña" required class="input-field w-full p-3 rounded-lg">
       </div>
-      <button type="submit" 
-        class="btn-primary w-full py-3 rounded-lg font-semibold text-white">
+      <button type="submit" class="btn-primary w-full py-3 rounded-lg font-semibold text-white">
         Entrar al Sistema
       </button>
       <p id="loginError" class="text-red-400 text-sm hidden text-center bg-red-950/30 p-2 rounded"></p>
@@ -192,45 +167,31 @@
 
     <!-- TABS -->
     <div class="flex gap-2 mb-6 glass-card p-2 rounded-xl">
-      <button id="tab-todos" class="flex-1 py-3 px-4 rounded-lg tab-active font-medium" onclick="setFilter('todos')">
-        👥 Todos
-      </button>
-      <button id="tab-ETT" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('ETT')">
-        💼 ETT
-      </button>
-      <button id="tab-Externos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Externos')">
-        🌐 Externos
-      </button>
+      <button id="tab-todos" class="flex-1 py-3 px-4 rounded-lg tab-active font-medium" onclick="setFilter('todos')">👥 Todos</button>
+      <button id="tab-ETT" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('ETT')">💼 ETT</button>
+      <button id="tab-Externos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Externos')">🌐 Externos</button>
     </div>
 
     <!-- FORM -->
     <div class="glass-card p-6 rounded-xl mb-6">
       <div class="grid grid-cols-1 md:grid-cols-6 gap-3">
-        <input id="dni" placeholder="DNI (12345678A)" 
-          class="input-field p-3 rounded-lg md:col-span-1 uppercase">
-        <input id="nombre" placeholder="Nombre completo" 
-          class="input-field p-3 rounded-lg md:col-span-2">
-        <select id="tipo" 
-          class="input-field p-3 rounded-lg">
+        <input id="dni" placeholder="DNI (12345678A)" class="input-field p-3 rounded-lg md:col-span-1 uppercase">
+        <input id="nombre" placeholder="Nombre completo" class="input-field p-3 rounded-lg md:col-span-2">
+        <select id="tipo" class="input-field p-3 rounded-lg">
           <option value="ETT">💼 ETT</option>
           <option value="Externos">🌐 Externos</option>
         </select>
-        <input id="depto" placeholder="Departamento" 
-          class="input-field p-3 rounded-lg">
-        <input id="obs" placeholder="Observaciones" 
-          class="input-field p-3 rounded-lg">
+        <input id="depto" placeholder="Departamento / Empresa" class="input-field p-3 rounded-lg">
+        <input id="obs" placeholder="Observaciones" class="input-field p-3 rounded-lg">
       </div>
       <div class="flex gap-3 mt-4">
-        <button id="btnEntrada" 
-          class="btn-primary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2">
-          <span class="text-xl">🟢</span> Registrar Entrada
+        <button id="btnEntrada" class="btn-primary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2">
+          <span class="text-xl"></span> Registrar Entrada
         </button>
-        <button id="btnSalida" 
-          class="btn-secondary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2">
+        <button id="btnSalida" class="btn-secondary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2">
           <span class="text-xl">🟠</span> Registrar Salida
         </button>
-        <button id="btnImport" 
-          class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition">
+        <button id="btnImport" class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition">
           📥 CSV
         </button>
       </div>
@@ -260,8 +221,7 @@
         </table>
       </div>
       <div class="p-4 border-t border-slate-700/50 flex justify-end">
-        <button id="btnExport" 
-          class="px-6 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold hover:shadow-lg hover:shadow-cyan-500/30 transition flex items-center gap-2">
+        <button id="btnExport" class="px-6 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold hover:shadow-lg hover:shadow-cyan-500/30 transition flex items-center gap-2">
           <span>📊</span> Exportar Excel
         </button>
       </div>
@@ -272,14 +232,16 @@
   <div id="importModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="glass-card p-6 rounded-2xl w-full max-w-md">
       <h3 class="text-xl font-bold gradient-text mb-4">📥 Importar Empleados</h3>
-      <p class="text-slate-400 text-sm mb-4">Formato CSV: DNI, Nombre, Departamento</p>
+      <p class="text-slate-400 text-sm mb-4">
+        Formatos aceptados:<br>
+        DNI, Nombre, Departamento (o Empresa/Lugar de Trabajo)<br>
+        <span class="text-cyan-400"> Consejo: Añade columna "TIPO" para clasificarlos automáticamente.</span>
+      </p>
       <input type="file" id="csvFile" accept=".csv,.xlsx,.xls" 
         class="block w-full text-sm mb-4 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary/20 file:text-primary hover:file:bg-primary/30">
       <div class="flex justify-end gap-3">
-        <button onclick="document.getElementById('importModal').classList.add('hidden')" 
-          class="px-4 py-2 text-slate-400 hover:text-white transition">Cancelar</button>
-        <button id="btnProcessImport" 
-          class="px-6 py-2 btn-primary rounded-lg font-semibold">Procesar</button>
+        <button onclick="document.getElementById('importModal').classList.add('hidden')" class="px-4 py-2 text-slate-400 hover:text-white transition">Cancelar</button>
+        <button id="btnProcessImport" class="px-6 py-2 btn-primary rounded-lg font-semibold">Procesar</button>
       </div>
       <p id="importStatus" class="text-sm mt-3 text-center hidden"></p>
     </div>
@@ -290,7 +252,7 @@
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, collection, addDoc, updateDoc, doc, query, where, onSnapshot, serverTimestamp, getDocs, writeBatch, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // ⚠️ REEMPLAZA CON TU CONFIG DE FIREBASE
+    // ⚠️ PEGA AQUÍ TU CONFIG DE FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyAVT8XCk0Ji-sgENTImSsmGE1UO2i7vBkA",
       authDomain: "regwork-19628.firebaseapp.com",
@@ -308,7 +270,6 @@
     let todayRecords = [];
     let currentFilter = 'todos';
 
-    // Fecha actual
     document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-ES', { 
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
     });
@@ -326,9 +287,7 @@
       return `<span class="text-cyan-400 font-semibold">${h}h ${m}m</span>`;
     }
 
-    function getTodayStr() {
-      return new Date().toISOString().split('T')[0];
-    }
+    function getTodayStr() { return new Date().toISOString().split('T')[0]; }
 
     function showMessage(text, type = 'info') {
       const el = document.getElementById('formMsg');
@@ -353,37 +312,25 @@
 
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('email').value;
-      const pass = document.getElementById('password').value;
-      const errorEl = document.getElementById('loginError');
-      
       try {
-        await signInWithEmailAndPassword(auth, email, pass);
-        errorEl.classList.add('hidden');
+        await signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value);
+        document.getElementById('loginError').classList.add('hidden');
       } catch (error) {
         let msg = 'Error al entrar';
         if (error.code === 'auth/user-not-found') msg = 'Usuario no registrado';
         else if (error.code === 'auth/wrong-password') msg = 'Contraseña incorrecta';
-        else if (error.code === 'auth/invalid-credential') msg = 'Credenciales inválidas';
-        errorEl.textContent = msg;
-        errorEl.classList.remove('hidden');
+        document.getElementById('loginError').textContent = msg;
+        document.getElementById('loginError').classList.remove('hidden');
       }
     });
 
     document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
     function loadToday() {
-      const q = query(
-        collection(db, 'registros'), 
-        where('uid', '==', currentUser.uid), 
-        where('fecha', '==', getTodayStr())
-      );
-      
+      const q = query(collection(db, 'registros'), where('uid', '==', currentUser.uid), where('fecha', '==', getTodayStr()));
       onSnapshot(q, (snapshot) => {
         todayRecords = [];
-        snapshot.forEach((doc) => {
-          todayRecords.push({ id: doc.id, ...doc.data() });
-        });
+        snapshot.forEach((d) => todayRecords.push({ id: d.id, ...d.data() }));
         todayRecords.sort((a, b) => (b.entrada?.seconds || 0) - (a.entrada?.seconds || 0));
         renderTable();
       });
@@ -391,9 +338,7 @@
 
     function renderTable() {
       const tbody = document.getElementById('tableBody');
-      const filtered = currentFilter === 'todos' 
-        ? todayRecords 
-        : todayRecords.filter(r => r.tipo === currentFilter);
+      const filtered = currentFilter === 'todos' ? todayRecords : todayRecords.filter(r => r.tipo === currentFilter);
       
       if (filtered.length === 0) {
         tbody.innerHTML = '<tr><td colspan="9" class="p-8 text-center text-slate-500">Sin registros hoy</td></tr>';
@@ -404,9 +349,7 @@
         const badgeClass = r.tipo === 'ETT' ? 'badge-ett' : 'badge-externos';
         const rowClass = !r.salida ? 'table-row-active' : 'hover:bg-slate-800/30';
         const actionBtn = !r.salida 
-          ? `<button onclick="window.quickCheckout('${r.dni}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition flex items-center gap-1 mx-auto">
-               <span>🟠</span> Salida
-             </button>`
+          ? `<button onclick="window.quickCheckout('${r.dni}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition flex items-center gap-1 mx-auto">🟠 Salida</button>`
           : `<span class="text-slate-600 text-xs">Completado</span>`;
         
         return `<tr class="${rowClass} transition-all">
@@ -440,30 +383,19 @@
 
     window.quickCheckout = async function(dni) {
       const active = todayRecords.find(r => r.dni === dni && !r.salida);
-      if (!active) {
-        showMessage('No hay entrada activa', 'error');
-        return;
-      }
-      
+      if (!active) { showMessage('No hay entrada activa', 'error'); return; }
       try {
-        await updateDoc(doc(db, 'registros', active.id), {
-          salida: serverTimestamp(),
-          estado: 'finalizado'
-        });
+        await updateDoc(doc(db, 'registros', active.id), { salida: serverTimestamp(), estado: 'finalizado' });
         showMessage('✅ Salida registrada correctamente');
-      } catch (error) {
-        showMessage('Error al registrar salida', 'error');
-      }
+      } catch (error) { showMessage('Error al registrar salida', 'error'); }
     };
 
     document.getElementById('dni').addEventListener('blur', async (e) => {
       const dni = e.target.value.trim().toUpperCase();
       if (!/^[0-9]{8}[A-Z]$/.test(dni)) return;
-      
       try {
         const docRef = doc(db, 'empleados', dni);
         const docSnap = await getDoc(docRef);
-        
         if (docSnap.exists()) {
           const emp = docSnap.data();
           document.getElementById('nombre').value = emp.nombre || '';
@@ -471,153 +403,49 @@
           document.getElementById('depto').value = emp.depto || '';
           showMessage('✅ Datos auto-completados');
         }
-      } catch (err) {
-        console.error('Error:', err);
-      }
+      } catch (err) { console.error('Error:', err); }
     });
 
     document.getElementById('btnEntrada').addEventListener('click', async () => {
       const dni = document.getElementById('dni').value.trim().toUpperCase();
-      if (!/^[0-9]{8}[A-Z]$/.test(dni)) {
-        showMessage('DNI no válido', 'error');
-        return;
-      }
-      
+      if (!/^[0-9]{8}[A-Z]$/.test(dni)) { showMessage('DNI no válido', 'error'); return; }
       try {
         await addDoc(collection(db, 'registros'), {
-          uid: currentUser.uid,
-          tipo: document.getElementById('tipo').value,
-          dni: dni,
+          uid: currentUser.uid, tipo: document.getElementById('tipo').value, dni, 
           nombre: document.getElementById('nombre').value.trim(),
-          depto: document.getElementById('depto').value.trim(),
-          observaciones: document.getElementById('obs').value.trim(),
-          fecha: getTodayStr(),
-          entrada: serverTimestamp(),
-          estado: 'activo'
+          depto: document.getElementById('depto').value.trim(), observaciones: document.getElementById('obs').value.trim(),
+          fecha: getTodayStr(), entrada: serverTimestamp(), estado: 'activo'
         });
         showMessage('✅ Entrada registrada');
-        ['dni', 'nombre', 'depto', 'obs'].forEach(id => document.getElementById(id).value = '');
-      } catch (error) {
-        showMessage('Error al guardar', 'error');
-      }
+        ['dni','nombre','depto','obs'].forEach(id => document.getElementById(id).value = '');
+      } catch (e) { showMessage('Error al guardar', 'error'); }
     });
 
     document.getElementById('btnSalida').addEventListener('click', async () => {
       const dni = document.getElementById('dni').value.trim().toUpperCase();
       const active = todayRecords.find(r => r.dni === dni && !r.salida);
-      
-      if (!active) {
-        showMessage('No hay entrada activa para ese DNI', 'error');
-        return;
-      }
-      
+      if (!active) { showMessage('No hay entrada activa', 'error'); return; }
       try {
-        await updateDoc(doc(db, 'registros', active.id), {
-          salida: serverTimestamp(),
-          estado: 'finalizado'
-        });
+        await updateDoc(doc(db, 'registros', active.id), { salida: serverTimestamp(), estado: 'finalizado' });
         showMessage('✅ Salida registrada');
         document.getElementById('dni').value = '';
-      } catch (error) {
-        showMessage('Error al actualizar', 'error');
-      }
+      } catch (e) { showMessage('Error', 'error'); }
     });
 
     document.getElementById('btnExport').addEventListener('click', () => {
-      const filtered = currentFilter === 'todos' 
-        ? todayRecords 
-        : todayRecords.filter(r => r.tipo === currentFilter);
-      
+      const filtered = currentFilter === 'todos' ? todayRecords : todayRecords.filter(r => r.tipo === currentFilter);
       const data = filtered.map(r => ({
-        "Tipo": r.tipo,
-        "Nombre del empleado": r.nombre || '',
-        "DNI": r.dni,
-        "Fecha de Registro": r.fecha,
-        "Hora de Entrada": fmtDate(r.entrada),
-        "Hora de Salida": fmtDate(r.salida),
-        "Total de horas trabajadas": r.salida ? calcDuration(r.entrada, r.salida).replace(/<[^>]*>/g, '') : '-',
-        "Observaciones": r.observaciones || '',
-        "Departamento": r.depto || ''
+        "Tipo": r.tipo, "Nombre": r.nombre || '', "DNI": r.dni, "Fecha": r.fecha,
+        "Entrada": fmtDate(r.entrada), "Salida": fmtDate(r.salida),
+        "Total": r.salida ? calcDuration(r.entrada, r.salida).replace(/<[^>]*>/g, '') : '-',
+        "Depto": r.depto || '', "Obs": r.observaciones || ''
       }));
-      
       const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Registro');
-      XLSX.writeFile(wb, `Registro_${currentFilter}_${getTodayStr()}.xlsx`);
+      XLSX.writeFile(wb, `Registro_${getTodayStr()}.xlsx`);
     });
 
-    document.getElementById('btnImport').addEventListener('click', () => {
-      document.getElementById('importModal').classList.remove('hidden');
-    });
+    document.getElementById('btnImport').addEventListener('click', () => document.getElementById('importModal').classList.remove('hidden'));
 
-    document.getElementById('btnProcessImport').addEventListener('click', async () => {
-      const file = document.getElementById('csvFile').files[0];
-      if (!file) {
-        alert('Selecciona un archivo');
-        return;
-      }
-      
-      const status = document.getElementById('importStatus');
-      status.classList.remove('hidden');
-      status.textContent = 'Leyendo archivo...';
-
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        try {
-          const wb = XLSX.read(e.target.result, {type: 'binary'});
-          const ws = wb.Sheets[wb.SheetNames[0]];
-          const data = XLSX.utils.sheet_to_json(ws, {header: 1});
-          
-          if (!data || data.length < 2) {
-            throw new Error('Archivo vacío');
-          }
-          
-          const headers = data[0].map(h => h.toString().toLowerCase().trim());
-          const idxDNI = headers.findIndex(h => h.includes('dni'));
-          const idxNombre = headers.findIndex(h => h.includes('nombre'));
-          const idxDepto = headers.findIndex(h => h.includes('departamento') || h.includes('depto'));
-          
-          if (idxDNI === -1) throw new Error('No se encontró columna DNI');
-          
-          status.textContent = `Procesando ${data.length - 1} registros...`;
-          
-          let batch = writeBatch(db);
-          let count = 0;
-          
-          for (let i = 1; i < data.length; i++) {
-            const row = data[i];
-            if (!row || row.length === 0) continue;
-            
-            const dni = row[idxDNI] ? row[idxDNI].toString().trim().toUpperCase() : '';
-            if (!dni) continue;
-            
-            const nombre = idxNombre !== -1 && row[idxNombre] ? row[idxNombre].toString().trim() : '';
-            const depto = idxDepto !== -1 && row[idxDepto] ? row[idxDepto].toString().trim() : '';
-            
-            const ref = doc(db, 'empleados', dni);
-            batch.set(ref, { dni, nombre, tipo: 'ETT', depto });
-            count++;
-            
-            if (count % 450 === 0) {
-              await batch.commit();
-              batch = writeBatch(db);
-            }
-          }
-          
-          if (count % 450 !== 0) await batch.commit();
-          
-          status.textContent = `✅ ${count} empleados importados`;
-          setTimeout(() => {
-            document.getElementById('importModal').classList.add('hidden');
-            document.getElementById('csvFile').value = '';
-          }, 2000);
-        } catch (err) {
-          status.textContent = '❌ Error: ' + err.message;
-          status.classList.add('text-red-400');
-        }
-      };
-      reader.readAsBinaryString(file);
-    });
-  </script>
-</body>
-</html>
+    document.getElementById('
