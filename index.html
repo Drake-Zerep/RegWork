@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro ETT & Externos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+  <style>
+    .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3b82f6; border-radius: 50%; width: 18px; height: 18px; animation: spin 1s linear infinite; display: inline-block; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col font-sans text-gray-800">
+
+  <!-- LOGIN -->
+  <div id="loginView" class="flex-1 flex items-center justify-center">
+    <form id="loginForm" class="bg-white p-8 rounded-xl shadow-lg w-full max-w-sm space-y-4">
+      <h2 class="text-xl font-bold text-center mb-2">Acceso Registro</h2>
+      <input type="email" id="email" placeholder="Email" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+      <input type="password" id="password" placeholder="Contraseña" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">Entrar</button>
+      <p id="loginError" class="text-red-500 text-sm hidden text-center"></p>
+    </form>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboardView" class="hidden flex-1 flex flex-col p-4 md:p-8 max-w-5xl mx-auto w-full">
+    <header class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-900">📋 Registro Diario</h1>
+      <button id="logoutBtn" class="text-sm text-gray-500 hover:text-red-600">Cerrar sesión</button>
+    </header>
+
+    <!-- FORM -->
+    <div class="bg-white p-5 rounded-xl shadow-sm mb-6 grid grid-cols-1 md:grid-cols-5 gap-3">
+      <input id="dni" placeholder="DNI (ej: 12345678A)" class="p-2 border rounded uppercase focus:ring-2 focus:ring-blue-500 outline-none">
+      <input id="nombre" placeholder="Nombre completo" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+      <input id="depto" placeholder="Departamento" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+      <input id="obs" placeholder="Observaciones (opcional)" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none md:col-span-2">
+      <div class="md:col-span-5 flex gap-2 mt-1">
+        <button id="btnEntrada" class="flex-1 bg-green-600 text-white py-2 rounded hover:bg-green-700 transition font-medium">🟢 Registrar Entrada</button>
+        <button id="btnSalida" class="flex-1 bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition font-medium">🟠 Registrar Salida</button>
+      </div>
+      <p id="formMsg" class="text-sm mt-1 md:col-span-5 hidden"></p>
+    </div>
+
+    <!-- TABLE -->
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden flex-1">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-gray-100 text-gray-600 uppercase">
+            <tr>
+              <th class="p-3">Nombre</th>
+              <th class="p-3">DNI</th>
+              <th class="p-3">Entrada</th>
+              <th class="p-3">Salida</th>
+              <th class="p-3">Total</th>
+              <th class="p-3">Depto.</th>
+              <th class="p-3">Obs.</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody" class="divide-y divide-gray-200">
+            <tr><td colspan="7" class="p-4 text-center text-gray-400">Cargando registros...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="p-4 border-t flex justify-end">
+        <button id="btnExport" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition flex items-center gap-2">
+          📥 Exportar Excel del Día
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, addDoc, updateDoc, doc, query, where, onSnapshot, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // 🔑 PEGA AQUÍ TU CONFIG DE FIREBASE
+    const firebaseConfig = {
+      apiKey: "AIzaSyAVT8XCk0Ji-sgENTImSsmGE1UO2i7vBkA",
+      authDomain: "regwork-19628.firebaseapp.com",
+      projectId: "regwork-19628",
+      storageBucket: "regwork-19628.firebasestorage.app",
+      messagingSenderId: "431109000889",
+      appId: "1:431109000889:web:d1072b49b0b1d795255568"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    let currentUser = null;
+    let todayRecords = [];
+
+    // Helpers
+    const fmtDate = (ts) => ts ? new Date(ts.seconds * 1000).toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'}) : '-';
+    const calcDuration = (start, end) => {
+      if (!end) return '-';
+      const ms = end.seconds * 1000 - start.seconds * 1000;
+      const h = Math.floor(ms / 3600000);
+      const m = Math.floor((ms % 3600000) / 60000);
+      return `${h}h ${m}m`;
+    };
+    const getTodayStr = () => new Date().toISOString().split('T')[0];
+    const msg = (t, type='info') => { const e = document.getElementById('formMsg'); e.textContent = t; e.className = `text-sm mt-1 md:col-span-5 ${type==='error'?'text-red-500':'text-green-600'}`; e.classList.remove('hidden'); setTimeout(()=>e.classList.add('hidden'), 3000); };
+
+    // Auth
+    onAuthStateChanged(auth, user => {
+      if (user) { currentUser = user; document.getElementById('loginView').classList.add('hidden'); document.getElementById('dashboardView').classList.remove('hidden'); loadToday(); }
+      else { document.getElementById('loginView').classList.remove('hidden'); document.getElementById('dashboardView').classList.add('hidden'); }
+    });
+
+    document.getElementById('loginForm').onsubmit = async (e) => {
+      e.preventDefault();
+      try { await signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value); }
+      catch(err) { document.getElementById('loginError').textContent = 'Credenciales incorrectas'; document.getElementById('loginError').classList.remove('hidden'); }
+    };
+    document.getElementById('logoutBtn').onclick = () => signOut(auth);
+
+    // Firestore
+    const loadToday = () => {
+      const q = query(collection(db, 'registros'), where('uid', '==', currentUser.uid), where('fecha', '==', getTodayStr()));
+      onSnapshot(q, (snap) => {
+        todayRecords = [];
+        snap.forEach(d => todayRecords.push({ id: d.id, ...d.data() }));
+        todayRecords.sort((a,b) => b.entrada.seconds - a.entrada.seconds);
+        renderTable();
+      });
+    };
+
+    const renderTable = () => {
+      const tbody = document.getElementById('tableBody');
+      if (!todayRecords.length) { tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-gray-400">Sin registros hoy</td></tr>'; return; }
+      tbody.innerHTML = todayRecords.map(r => `
+        <tr class="hover:bg-gray-50 ${!r.salida ? 'bg-green-50' : ''}">
+          <td class="p-3 font-medium">${r.nombre || '-'}</td>
+          <td class="p-3 font-mono text-xs">${r.dni}</td>
+          <td class="p-3">${fmtDate(r.entrada)}</td>
+          <td class="p-3">${fmtDate(r.salida)}</td>
+          <td class="p-3 font-semibold text-blue-700">${calcDuration(r.entrada, r.salida)}</td>
+          <td class="p-3">${r.depto || '-'}</td>
+          <td class="p-3 max-w-xs truncate" title="${r.observaciones || ''}">${r.observaciones || '-'}</td>
+        </tr>`).join('');
+    };
+
+    // Acciones
+    document.getElementById('btnEntrada').onclick = async () => {
+      const dni = document.getElementById('dni').value.trim().toUpperCase();
+      if (!/^[0-9]{8}[A-Z]$/.test(dni)) return msg('DNI no válido', 'error');
+      try {
+        await addDoc(collection(db, 'registros'), {
+          uid: currentUser.uid, dni, nombre: document.getElementById('nombre').value.trim(),
+          depto: document.getElementById('depto').value.trim(), observaciones: document.getElementById('obs').value.trim(),
+          fecha: getTodayStr(), entrada: serverTimestamp(), estado: 'activo'
+        });
+        msg('✅ Entrada registrada');
+        document.getElementById('dni').value = '';
+        document.getElementById('obs').value = '';
+      } catch(e) { msg('Error al guardar', 'error'); }
+    };
+
+    document.getElementById('btnSalida').onclick = async () => {
+      const dni = document.getElementById('dni').value.trim().toUpperCase();
+      const active = todayRecords.find(r => r.dni === dni && !r.salida);
+      if (!active) return msg('No hay entrada activa para ese DNI hoy', 'error');
+      try {
+        await updateDoc(doc(db, 'registros', active.id), { salida: serverTimestamp(), estado: 'finalizado' });
+        msg('✅ Salida registrada');
+        document.getElementById('dni').value = '';
+      } catch(e) { msg('Error al actualizar', 'error'); }
+    };
+
+    // Export
+    document.getElementById('btnExport').onclick = () => {
+      const data = todayRecords.map(r => ({
+        "Nombre del empleado": r.nombre || '',
+        "DNI": r.dni,
+        "Fecha de Registro": r.fecha,
+        "Hora de Entrada": fmtDate(r.entrada),
+        "Hora de Salida": fmtDate(r.salida),
+        "Total de horas trabajadas": calcDuration(r.entrada, r.salida),
+        "Observaciones": r.observaciones || '',
+        "Departamento": r.depto || ''
+      }));
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, `Registro_${getTodayStr()}`);
+      XLSX.writeFile(wb, `Registro_${getTodayStr()}.xlsx`);
+    };
+  </script>
+</body>
+</html>
