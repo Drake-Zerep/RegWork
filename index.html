@@ -439,17 +439,27 @@
       window.returnKey(activeLog.id, keyNum);
     });
 
-    // ACTIONS VEHICULOS
+        // ACTIONS VEHICULOS
     async function loadVehiclesMaster() {
       const snap = await getDocs(collection(db,'vehiculos'));
       vehiclesMap = {}; snap.forEach(d => vehiclesMap[d.id] = d.data());
     }
-    document.getElementById('matriculaSelect').addEventListener('change', (e) => {
-      const val = e.target.value;
-      if(vehiclesMap[val]) {
-        document.getElementById('matriculaInput').value = val;
-        document.getElementById('empresaVehiculo').value = vehiclesMap[val].empresa || '';
-      }
+    
+    // Autocompletar matrícula (igual que DNI)
+    document.getElementById('matriculaInput').addEventListener('blur', async (e) => {
+      const mat = e.target.value.trim().toUpperCase();
+      if(!mat || mat.length < 5) return;
+      
+      try {
+        const docRef = doc(db,'vehiculos',mat);
+        const docSnap = await getDoc(docRef);
+        
+        if(docSnap.exists()) {
+          const veh = docSnap.data();
+          document.getElementById('empresaVehiculo').value = veh.empresa || '';
+          showMessage('✅ Datos auto-completados');
+        }
+      } catch(err) { console.error('Error:', err); }
     });
     
     window.quickCheckoutVehicle = async (mat) => {
@@ -460,8 +470,8 @@
     };
 
     document.getElementById('btnEntradaVehiculo').addEventListener('click', async () => {
-      let mat = document.getElementById('matriculaSelect').value || document.getElementById('matriculaInput').value.trim().toUpperCase();
-      if(!mat) { showMessage('Selecciona o escribe matrícula','error'); return; }
+      let mat = document.getElementById('matriculaInput').value.trim().toUpperCase();
+      if(!mat) { showMessage('Escribe la matrícula','error'); return; }
       // Formato simple check
       mat = mat.replace(/[^A-Z0-9]/g, '');
       if(mat.length < 5) { showMessage('Formato matrícula incorrecto','error'); return; }
@@ -474,22 +484,22 @@
           fecha:getTodayStr(), entrada:serverTimestamp(), estado:'activo' 
         });
         showMessage('✅ Entrada vehículo registrada'); 
-        ['matriculaSelect','matriculaInput','empresaVehiculo','obsVehiculo'].forEach(id=>document.getElementById(id).value='');
+        ['matriculaInput','empresaVehiculo','obsVehiculo'].forEach(id=>document.getElementById(id).value='');
       } catch(e) { showMessage('Error','error'); }
     });
 
     document.getElementById('btnSalidaVehiculo').addEventListener('click', async () => {
-      let mat = document.getElementById('matriculaSelect').value || document.getElementById('matriculaInput').value.trim().toUpperCase();
+      let mat = document.getElementById('matriculaInput').value.trim().toUpperCase();
       if(!mat) { showMessage('Matrícula vacía','error'); return; }
       mat = mat.replace(/[^A-Z0-9]/g, '');
       const active = todayVehicles.find(v=>v.matricula===mat && !v.salida);
       if(!active) { showMessage('No hay entrada activa para esta matrícula','error'); return; }
-      try { await updateDoc(doc(db,'registro_vehiculos',active.id), {salida:serverTimestamp(), estado:'finalizado'}); showMessage('✅ Salida vehículo registrada'); document.getElementById('matriculaInput').value=''; document.getElementById('matriculaSelect').value=''; } 
+      try { await updateDoc(doc(db,'registro_vehiculos',active.id), {salida:serverTimestamp(), estado:'finalizado'}); showMessage('✅ Salida vehículo registrada'); document.getElementById('matriculaInput').value=''; } 
       catch(e) { showMessage('Error','error'); }
     });
 
     document.getElementById('btnGuardarVehiculo').addEventListener('click', async () => {
-      const mat = document.getElementById('matriculaSelect').value || document.getElementById('matriculaInput').value.trim().toUpperCase();
+      const mat = document.getElementById('matriculaInput').value.trim().toUpperCase();
       const emp = document.getElementById('empresaVehiculo').value.trim();
       if(!mat || !emp) { showMessage('Matrícula y Empresa requeridas','error'); return; }
       try { await setDoc(doc(db,'vehiculos',mat), {matricula:mat, empresa:emp}); showMessage(`✅ Vehículo guardado`); } catch(e){ showMessage('Error','error'); }
