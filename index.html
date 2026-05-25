@@ -12,11 +12,8 @@
       theme: {
         extend: {
           colors: {
-            primary: '#06b6d4',
-            secondary: '#8b5cf6',
-            accent: '#f59e0b',
-            dark: '#0f172a',
-            darker: '#020617',
+            primary: '#06b6d4', secondary: '#8b5cf6', accent: '#f59e0b',
+            dark: '#0f172a', darker: '#020617'
           }
         }
       }
@@ -24,111 +21,27 @@
   </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-    
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
-      background-attachment: fixed;
-    }
-    
-    .glass {
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .glass-card {
-      background: rgba(30, 41, 59, 0.6);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(6, 182, 212, 0.2);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    }
-    
-    .neon-text {
-      text-shadow: 0 0 10px rgba(6, 182, 212, 0.8), 0 0 20px rgba(6, 182, 212, 0.5);
-    }
-    
-    .gradient-text {
-      background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .tab-active {
-      background: linear-gradient(135deg, rgba(6, 182, 212, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
-      border-bottom: 2px solid #06b6d4;
-      color: #06b6d4;
-    }
-    
-    .tab-inactive {
-      border-bottom: 2px solid transparent;
-      color: #64748b;
-      transition: all 0.3s ease;
-    }
-    
-    .tab-inactive:hover {
-      color: #06b6d4;
-      background: rgba(6, 182, 212, 0.1);
-    }
-    
-    .btn-primary {
-      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
-      transition: all 0.3s ease;
-    }
+    body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%); background-attachment: fixed; }
+    .glass-card { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(6, 182, 212, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+    .neon-text { text-shadow: 0 0 10px rgba(6, 182, 212, 0.8), 0 0 20px rgba(6, 182, 212, 0.5); }
+    .gradient-text { background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .tab-active { background: linear-gradient(135deg, rgba(6, 182, 212, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%); border-bottom: 2px solid #06b6d4; color: #06b6d4; }
+    .tab-inactive { border-bottom: 2px solid transparent; color: #64748b; transition: all 0.3s ease; }
+    .tab-inactive:hover { color: #06b6d4; background: rgba(6, 182, 212, 0.1); }
+    .btn-primary { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4); transition: all 0.3s ease; }
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(6, 182, 212, 0.6); }
-    
-    .btn-secondary {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
-      transition: all 0.3s ease;
-    }
+    .btn-secondary { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); transition: all 0.3s ease; }
     .btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6); }
-
-    .btn-db {
-        background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
-        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
-        transition: all 0.3s ease;
-    }
+    .btn-db { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); transition: all 0.3s ease; }
     .btn-db:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6); }
-    
-    .input-field {
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(6, 182, 212, 0.3);
-      color: #e2e8f0;
-      transition: all 0.3s ease;
-    }
-    .input-field:focus {
-      border-color: #06b6d4;
-      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
-      outline: none;
-    }
+    .input-field { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(6, 182, 212, 0.3); color: #e2e8f0; transition: all 0.3s ease; }
+    .input-field:focus { border-color: #06b6d4; box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2); outline: none; }
     .input-field::placeholder { color: #64748b; }
-    
-    .table-row-active {
-      background: linear-gradient(90deg, rgba(6, 182, 212, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
-      border-left: 3px solid #06b6d4;
-    }
-    
-    .badge-ett {
-      background: rgba(139, 92, 246, 0.2);
-      border: 1px solid rgba(139, 92, 246, 0.5);
-      color: #a78bfa;
-    }
-    
-    .badge-externos {
-      background: rgba(6, 182, 212, 0.2);
-      border: 1px solid rgba(6, 182, 212, 0.5);
-      color: #22d3ee;
-    }
-    
-    .grid-bg {
-      background-image: 
-        linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
-      background-size: 50px 50px;
-    }
+    .table-row-active { background: linear-gradient(90deg, rgba(6, 182, 212, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%); border-left: 3px solid #06b6d4; }
+    .badge-ett { background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.5); color: #a78bfa; }
+    .badge-externos { background: rgba(6, 182, 212, 0.2); border: 1px solid rgba(6, 182, 212, 0.5); color: #22d3ee; }
+    .badge-prestada { background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.5); color: #fbbf24; }
+    .grid-bg { background-image: linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px); background-size: 50px 50px; }
   </style>
 </head>
 <body class="bg-darker min-h-screen flex flex-col text-slate-200 grid-bg">
@@ -148,9 +61,7 @@
         <input type="email" id="email" placeholder="Email" required class="input-field w-full p-3 rounded-lg">
         <input type="password" id="password" placeholder="Contraseña" required class="input-field w-full p-3 rounded-lg">
       </div>
-      <button type="submit" class="btn-primary w-full py-3 rounded-lg font-semibold text-white">
-        Entrar al Sistema
-      </button>
+      <button type="submit" class="btn-primary w-full py-3 rounded-lg font-semibold text-white">Entrar al Sistema</button>
       <p id="loginError" class="text-red-400 text-sm hidden text-center bg-red-950/30 p-2 rounded"></p>
     </form>
   </div>
@@ -159,70 +70,67 @@
   <div id="dashboardView" class="hidden flex-1 flex flex-col p-4 md:p-8 max-w-7xl mx-auto w-full relative z-10">
     <header class="flex justify-between items-center mb-6 glass-card p-4 rounded-xl">
       <div>
-        <h1 class="text-3xl font-bold gradient-text neon-text">📋 Registro Diario</h1>
+        <h1 class="text-3xl font-bold gradient-text neon-text" id="mainTitle">📋 Registro Diario</h1>
         <p class="text-slate-400 text-sm mt-1" id="currentDate"></p>
       </div>
-      <button id="logoutBtn" class="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 transition">
-        Cerrar sesión
-      </button>
+      <button id="logoutBtn" class="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 transition">Cerrar sesión</button>
     </header>
 
     <!-- TABS -->
     <div class="flex gap-2 mb-6 glass-card p-2 rounded-xl">
-      <button id="tab-todos" class="flex-1 py-3 px-4 rounded-lg tab-active font-medium" onclick="setFilter('todos')"> Todos</button>
+      <button id="tab-todos" class="flex-1 py-3 px-4 rounded-lg tab-active font-medium" onclick="setFilter('todos')">👥 Todos</button>
       <button id="tab-ETT" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('ETT')">💼 ETT</button>
-      <button id="tab-Externos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Externos')">🌐 Externos</button>
+      <button id="tab-Externos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Externos')"> Externos</button>
+      <button id="tab-Llaves" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Llaves')">🔑 Llaves</button>
     </div>
 
-    <!-- FORM -->
-    <div class="glass-card p-6 rounded-xl mb-6">
+    <!-- FORM EMPLEADOS -->
+    <div id="formEmpleados" class="glass-card p-6 rounded-xl mb-6">
       <div class="grid grid-cols-1 md:grid-cols-6 gap-3">
         <input id="dni" placeholder="DNI (12345678A)" class="input-field p-3 rounded-lg md:col-span-1 uppercase">
         <input id="nombre" placeholder="Nombre completo" class="input-field p-3 rounded-lg md:col-span-2">
         <select id="tipo" class="input-field p-3 rounded-lg">
-          <option value="ETT"> ETT</option>
+          <option value="ETT">💼 ETT</option>
           <option value="Externos">🌐 Externos</option>
         </select>
         <input id="depto" placeholder="Departamento / Empresa" class="input-field p-3 rounded-lg">
         <input id="obs" placeholder="Observaciones" class="input-field p-3 rounded-lg">
       </div>
       <div class="flex gap-3 mt-4">
-        <button id="btnEntrada" class="btn-primary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2">
-          <span>🟢</span> Registrar Entrada
-        </button>
-        <button id="btnSalida" class="btn-secondary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2">
-          <span></span> Registrar Salida
-        </button>
-        <!-- NUEVO BOTÓN AÑADIDO -->
-        <button id="btnGuardarEmpleado" class="btn-db px-4 py-3 rounded-lg font-semibold text-white flex items-center gap-2 border border-purple-500/50">
-          💾 Guardar Empleado
-        </button>
-        <button id="btnImport" class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition">
-           CSV
-        </button>
+        <button id="btnEntrada" class="btn-primary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span>🟢</span> Registrar Entrada</button>
+        <button id="btnSalida" class="btn-secondary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span>🟠</span> Registrar Salida</button>
+        <button id="btnGuardarEmpleado" class="btn-db px-4 py-3 rounded-lg font-semibold text-white flex items-center gap-2 border border-purple-500/50">💾 Guardar Empleado</button>
+        <button id="btnImport" class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition">📥 CSV Personal</button>
       </div>
       <p id="formMsg" class="text-sm mt-3 hidden"></p>
+    </div>
+
+    <!-- FORM LLAVES -->
+    <div id="formLlaves" class="hidden glass-card p-6 rounded-xl mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <select id="llaveSelect" class="input-field p-3 rounded-lg md:col-span-1">
+          <option value="">Seleccionar Llave...</option>
+        </select>
+        <input id="personaLlave" placeholder="Nombre de la persona" class="input-field p-3 rounded-lg md:col-span-2">
+        <input id="obsLlave" placeholder="Observaciones" class="input-field p-3 rounded-lg">
+      </div>
+      <div class="flex gap-3 mt-4">
+        <button id="btnRetirar" class="btn-primary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span>🔓</span> Retirar Llave</button>
+        <button id="btnEntregar" class="btn-secondary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span>🔒</span> Entregar Llave</button>
+        <button id="btnImportLlaves" class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition">📥 CSV Llaves</button>
+      </div>
+      <p id="formMsgLlaves" class="text-sm mt-3 hidden"></p>
     </div>
 
     <!-- TABLE -->
     <div class="glass-card rounded-xl overflow-hidden flex-1">
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
-          <thead class="bg-slate-800/80 text-slate-300 uppercase text-xs">
-            <tr>
-              <th class="p-4 text-left">Tipo</th>
-              <th class="p-4 text-left">Nombre</th>
-              <th class="p-4 text-left">DNI</th>
-              <th class="p-4 text-left">Entrada</th>
-              <th class="p-4 text-left">Salida</th>
-              <th class="p-4 text-left">Total</th>
-              <th class="p-4 text-left">Depto.</th>
-              <th class="p-4 text-left">Obs.</th>
-              <th class="p-4 text-center">Acción</th>
-            </tr>
+          <thead class="bg-slate-800/80 text-slate-300 uppercase text-xs" id="tableHead">
+            <!-- Dynamic headers -->
           </thead>
           <tbody id="tableBody" class="divide-y divide-slate-700/50">
-            <tr><td colspan="9" class="p-8 text-center text-slate-500">Cargando registros...</td></tr>
+            <tr><td colspan="9" class="p-8 text-center text-slate-500">Selecciona una pestaña</td></tr>
           </tbody>
         </table>
       </div>
@@ -234,17 +142,12 @@
     </div>
   </div>
 
-  <!-- IMPORT MODAL -->
+  <!-- MODAL IMPORT PERSONAL -->
   <div id="importModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="glass-card p-6 rounded-2xl w-full max-w-md">
-      <h3 class="text-xl font-bold gradient-text mb-4">📥 Importar Empleados</h3>
-      <p class="text-slate-400 text-sm mb-4">
-        Formatos aceptados:<br>
-        DNI, Nombre, Departamento (o Empresa/Lugar de Trabajo)<br>
-        <span class="text-cyan-400"> Consejo: Añade columna "TIPO" para clasificarlos automáticamente.</span>
-      </p>
-      <input type="file" id="csvFile" accept=".csv,.xlsx,.xls" 
-        class="block w-full text-sm mb-4 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary/20 file:text-primary hover:file:bg-primary/30">
+      <h3 class="text-xl font-bold gradient-text mb-4">📥 Importar Personal</h3>
+      <p class="text-slate-400 text-sm mb-4">CSV: DNI, Nombre, Departamento, Tipo (opcional)</p>
+      <input type="file" id="csvFile" accept=".csv,.xlsx,.xls" class="block w-full text-sm mb-4 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary/20 file:text-primary hover:file:bg-primary/30">
       <div class="flex justify-end gap-3">
         <button onclick="document.getElementById('importModal').classList.add('hidden')" class="px-4 py-2 text-slate-400 hover:text-white transition">Cancelar</button>
         <button id="btnProcessImport" class="px-6 py-2 btn-primary rounded-lg font-semibold">Procesar</button>
@@ -253,13 +156,26 @@
     </div>
   </div>
 
+  <!-- MODAL IMPORT LLAVES -->
+  <div id="importLlavesModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="glass-card p-6 rounded-2xl w-full max-w-md">
+      <h3 class="text-xl font-bold gradient-text mb-4">📥 Importar Llaves</h3>
+      <p class="text-slate-400 text-sm mb-4">CSV: Número, Nombre</p>
+      <input type="file" id="csvFileLlaves" accept=".csv,.xlsx,.xls" class="block w-full text-sm mb-4 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary/20 file:text-primary hover:file:bg-primary/30">
+      <div class="flex justify-end gap-3">
+        <button onclick="document.getElementById('importLlavesModal').classList.add('hidden')" class="px-4 py-2 text-slate-400 hover:text-white transition">Cancelar</button>
+        <button id="btnProcessImportLlaves" class="px-6 py-2 btn-primary rounded-lg font-semibold">Procesar</button>
+      </div>
+      <p id="importStatusLlaves" class="text-sm mt-3 text-center hidden"></p>
+    </div>
+  </div>
+
   <script type="module">
-    // He añadido 'setDoc' a los imports para poder guardar perfiles directamente
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, collection, addDoc, updateDoc, doc, query, where, onSnapshot, serverTimestamp, getDocs, writeBatch, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // ⚠️ REEMPLAZA ESTO CON TU CONFIG DE FIREBASE
+    // ⚠️ PEGA TU CONFIG DE FIREBASE AQUÍ
     const firebaseConfig = {
       apiKey: "AIzaSyAVT8XCk0Ji-sgENTImSsmGE1UO2i7vBkA",
       authDomain: "regwork-19628.firebaseapp.com",
@@ -275,35 +191,27 @@
     
     let currentUser = null;
     let todayRecords = [];
+    let todayKeys = [];
     let currentFilter = 'todos';
+    let keysMap = {}; // { numero: { nombre, estado } }
 
-    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-ES', { 
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
-    });
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-    function fmtDate(ts) {
-      if (!ts) return '-';
-      return new Date(ts.seconds * 1000).toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
-    }
-
+    function fmtDate(ts) { if (!ts) return '-'; return new Date(ts.seconds * 1000).toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'}); }
     function calcDuration(start, end) {
       if (!end || !start) return '<span class="text-slate-500">-</span>';
       const ms = end.seconds * 1000 - start.seconds * 1000;
-      const h = Math.floor(ms / 3600000);
-      const m = Math.floor((ms % 3600000) / 60000);
+      const h = Math.floor(ms / 3600000); const m = Math.floor((ms % 3600000) / 60000);
       return `<span class="text-cyan-400 font-semibold">${h}h ${m}m</span>`;
     }
-
     function getTodayStr() { return new Date().toISOString().split('T')[0]; }
-
-    function showMessage(text, type = 'info') {
-      const el = document.getElementById('formMsg');
-      el.textContent = text;
-      el.className = `text-sm mt-3 p-3 rounded-lg ${type === 'error' ? 'bg-red-950/50 text-red-400 border border-red-500/30' : 'bg-green-950/50 text-green-400 border border-green-500/30'}`;
-      el.classList.remove('hidden');
-      setTimeout(() => el.classList.add('hidden'), 3000);
+    function showMessage(text, type='info') {
+      const el = document.getElementById(currentFilter === 'Llaves' ? 'formMsgLlaves' : 'formMsg');
+      el.textContent = text; el.className = `text-sm mt-3 p-3 rounded-lg ${type==='error'?'bg-red-950/50 text-red-400 border border-red-500/30':'bg-green-950/50 text-green-400 border border-green-500/30'}`;
+      el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000);
     }
 
+    // AUTH
     onAuthStateChanged(auth, (user) => {
       if (user) {
         currentUser = user;
@@ -316,230 +224,219 @@
         document.getElementById('dashboardView').classList.add('hidden');
       }
     });
-
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      try {
-        await signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value);
-        document.getElementById('loginError').classList.add('hidden');
-      } catch (error) {
+      try { await signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value); document.getElementById('loginError').classList.add('hidden'); } 
+      catch (error) {
         let msg = 'Error al entrar';
         if (error.code === 'auth/user-not-found') msg = 'Usuario no registrado';
         else if (error.code === 'auth/wrong-password') msg = 'Contraseña incorrecta';
-        document.getElementById('loginError').textContent = msg;
-        document.getElementById('loginError').classList.remove('hidden');
+        document.getElementById('loginError').textContent = msg; document.getElementById('loginError').classList.remove('hidden');
       }
     });
-
     document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
-    function loadToday() {
-      const q = query(collection(db, 'registros'), where('uid', '==', currentUser.uid), where('fecha', '==', getTodayStr()));
-      onSnapshot(q, (snapshot) => {
-        todayRecords = [];
-        snapshot.forEach((d) => todayRecords.push({ id: d.id, ...d.data() }));
-        todayRecords.sort((a, b) => (b.entrada?.seconds || 0) - (a.entrada?.seconds || 0));
-        renderTable();
+    // FILTER & LOAD
+    window.setFilter = function(filter) {
+      currentFilter = filter;
+      ['todos','ETT','Externos','Llaves'].forEach(f => {
+        const btn = document.getElementById('tab-'+f);
+        if(btn){ btn.classList.toggle('tab-active', f===filter); btn.classList.toggle('tab-inactive', f!==filter); }
       });
+      document.getElementById('formEmpleados').classList.toggle('hidden', filter==='Llaves');
+      document.getElementById('formLlaves').classList.toggle('hidden', filter!=='Llaves');
+      document.getElementById('mainTitle').textContent = filter==='Llaves' ? '🔑 Control de Llaves' : ' Registro Diario';
+      updateTableHeaders();
+      loadToday();
+    };
+
+    function updateTableHeaders() {
+      const head = document.getElementById('tableHead');
+      if(currentFilter === 'Llaves') {
+        head.innerHTML = `<tr><th class="p-4 text-left">Nº Llave</th><th class="p-4 text-left">Nombre Llave</th><th class="p-4 text-left">Persona</th><th class="p-4 text-left">Retiro</th><th class="p-4 text-left">Entrega</th><th class="p-4 text-left">Duración</th><th class="p-4 text-left">Estado</th><th class="p-4 text-center">Acción</th></tr>`;
+      } else {
+        head.innerHTML = `<tr><th class="p-4 text-left">Tipo</th><th class="p-4 text-left">Nombre</th><th class="p-4 text-left">DNI</th><th class="p-4 text-left">Entrada</th><th class="p-4 text-left">Salida</th><th class="p-4 text-left">Total</th><th class="p-4 text-left">Depto.</th><th class="p-4 text-left">Obs.</th><th class="p-4 text-center">Acción</th></tr>`;
+      }
     }
 
-    function renderTable() {
-      const tbody = document.getElementById('tableBody');
-      const filtered = currentFilter === 'todos' ? todayRecords : todayRecords.filter(r => r.tipo === currentFilter);
-      
-      if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" class="p-8 text-center text-slate-500">Sin registros hoy</td></tr>';
-        return;
+    function loadToday() {
+      if(currentFilter === 'Llaves') {
+        const q = query(collection(db, 'registro_llaves'), where('uid','==',currentUser.uid), where('fecha','==',getTodayStr()));
+        onSnapshot(q, snap => {
+          todayKeys = []; snap.forEach(d => todayKeys.push({id:d.id, ...d.data()}));
+          todayKeys.sort((a,b) => (b.horaRetiro?.seconds||0) - (a.horaRetiro?.seconds||0));
+          loadKeysDropdown(); renderKeysTable();
+        });
+      } else {
+        const q = query(collection(db, 'registros'), where('uid','==',currentUser.uid), where('fecha','==',getTodayStr()));
+        onSnapshot(q, snap => {
+          todayRecords = []; snap.forEach(d => todayRecords.push({id:d.id, ...d.data()}));
+          todayRecords.sort((a,b) => (b.entrada?.seconds||0) - (a.entrada?.seconds||0));
+          renderEmpleadosTable();
+        });
       }
-      
+    }
+
+    // RENDER EMPLEADOS
+    function renderEmpleadosTable() {
+      const tbody = document.getElementById('tableBody');
+      const filtered = currentFilter==='todos' ? todayRecords : todayRecords.filter(r=>r.tipo===currentFilter);
+      if(!filtered.length) { tbody.innerHTML = '<tr><td colspan="9" class="p-8 text-center text-slate-500">Sin registros hoy</td></tr>'; return; }
       tbody.innerHTML = filtered.map(r => {
-        const badgeClass = r.tipo === 'ETT' ? 'badge-ett' : 'badge-externos';
+        const badgeClass = r.tipo==='ETT' ? 'badge-ett' : 'badge-externos';
         const rowClass = !r.salida ? 'table-row-active' : 'hover:bg-slate-800/30';
-        const actionBtn = !r.salida 
-          ? `<button onclick="window.quickCheckout('${r.dni}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition flex items-center gap-1 mx-auto"> Salida</button>`
-          : `<span class="text-slate-600 text-xs">Completado</span>`;
-        
-        return `<tr class="${rowClass} transition-all">
-          <td class="p-4"><span class="px-2 py-1 text-xs rounded-full ${badgeClass}">${r.tipo}</span></td>
-          <td class="p-4 font-medium text-slate-200">${r.nombre || '-'}</td>
-          <td class="p-4 font-mono text-xs text-slate-400">${r.dni}</td>
-          <td class="p-4 text-cyan-400">${fmtDate(r.entrada)}</td>
-          <td class="p-4 text-slate-400">${fmtDate(r.salida)}</td>
-          <td class="p-4">${calcDuration(r.entrada, r.salida)}</td>
-          <td class="p-4 text-slate-400">${r.depto || '-'}</td>
-          <td class="p-4 text-slate-500 text-xs max-w-xs truncate">${r.observaciones || '-'}</td>
-          <td class="p-4">${actionBtn}</td>
-        </tr>`;
+        const actionBtn = !r.salida ? `<button onclick="window.quickCheckout('${r.dni}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition mx-auto">🟠 Salida</button>` : `<span class="text-slate-600 text-xs">Completado</span>`;
+        return `<tr class="${rowClass} transition-all"><td class="p-4"><span class="px-2 py-1 text-xs rounded-full ${badgeClass}">${r.tipo}</span></td><td class="p-4 font-medium">${r.nombre||'-'}</td><td class="p-4 font-mono text-xs text-slate-400">${r.dni}</td><td class="p-4 text-cyan-400">${fmtDate(r.entrada)}</td><td class="p-4 text-slate-400">${fmtDate(r.salida)}</td><td class="p-4">${calcDuration(r.entrada, r.salida)}</td><td class="p-4 text-slate-400">${r.depto||'-'}</td><td class="p-4 text-slate-500 text-xs max-w-xs truncate">${r.observaciones||'-'}</td><td class="p-4">${actionBtn}</td></tr>`;
       }).join('');
     }
 
-    window.setFilter = function(filter) {
-      currentFilter = filter;
-      ['todos', 'ETT', 'Externos'].forEach(f => {
-        const btn = document.getElementById('tab-' + f);
-        if (f === filter) {
-          btn.classList.remove('tab-inactive');
-          btn.classList.add('tab-active');
-        } else {
-          btn.classList.remove('tab-active');
-          btn.classList.add('tab-inactive');
-        }
+    // RENDER LLAVES
+    function loadKeysDropdown() {
+      const select = document.getElementById('llaveSelect');
+      select.innerHTML = '<option value="">Seleccionar Llave...</option>';
+      Object.entries(keysMap).forEach(([num, data]) => {
+        const opt = document.createElement('option');
+        opt.value = num; opt.textContent = `${num} - ${data.nombre} (${data.estado})`;
+        select.appendChild(opt);
       });
-      renderTable();
+    }
+    function renderKeysTable() {
+      const tbody = document.getElementById('tableBody');
+      if(!todayKeys.length) { tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-slate-500">Sin movimientos hoy</td></tr>'; return; }
+      tbody.innerHTML = todayKeys.map(k => {
+        const rowClass = k.estado==='activa' ? 'table-row-active' : 'hover:bg-slate-800/30';
+        const actionBtn = k.estado==='activa' ? `<button onclick="window.returnKey('${k.id}', '${k.llaveNumero}')" class="px-3 py-1 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/30 text-xs font-semibold transition mx-auto">🔒 Entregar</button>` : `<span class="text-slate-600 text-xs">Devuelta</span>`;
+        return `<tr class="${rowClass} transition-all"><td class="p-4 font-mono text-cyan-400">${k.llaveNumero}</td><td class="p-4">${k.llaveNombre||'-'}</td><td class="p-4 font-medium">${k.persona}</td><td class="p-4 text-cyan-400">${fmtDate(k.horaRetiro)}</td><td class="p-4 text-slate-400">${fmtDate(k.horaEntrega)}</td><td class="p-4">${calcDuration(k.horaRetiro, k.horaEntrega)}</td><td class="p-4"><span class="px-2 py-1 text-xs rounded-full ${k.estado==='activa'?'badge-prestada':'bg-slate-700 text-slate-400'}">${k.estado==='activa'?'Prestada':'Devuelta'}</span></td><td class="p-4">${actionBtn}</td></tr>`;
+      }).join('');
+    }
+
+    // ACTIONS EMPLEADOS
+    window.quickCheckout = async (dni) => {
+      const active = todayRecords.find(r=>r.dni===dni && !r.salida);
+      if(!active) { showMessage('No hay entrada activa','error'); return; }
+      try { await updateDoc(doc(db,'registros',active.id), {salida:serverTimestamp(), estado:'finalizado'}); showMessage('✅ Salida registrada'); } 
+      catch(e) { showMessage('Error','error'); }
     };
-
-    window.quickCheckout = async function(dni) {
-      const active = todayRecords.find(r => r.dni === dni && !r.salida);
-      if (!active) { showMessage('No hay entrada activa', 'error'); return; }
-      try {
-        await updateDoc(doc(db, 'registros', active.id), { salida: serverTimestamp(), estado: 'finalizado' });
-        showMessage('✅ Salida registrada correctamente');
-      } catch (error) { showMessage('Error al registrar salida', 'error'); }
-    };
-
-    // NUEVA FUNCIÓN: GUARDAR EMPLEADO EN BBDD
-    document.getElementById('btnGuardarEmpleado').addEventListener('click', async () => {
-        const dni = document.getElementById('dni').value.trim().toUpperCase();
-        const nombre = document.getElementById('nombre').value.trim();
-        const depto = document.getElementById('depto').value.trim();
-        const tipo = document.getElementById('tipo').value;
-    
-        if (!/^[0-9]{8}[A-Z]$/.test(dni)) {
-            showMessage('DNI no válido para guardar', 'error');
-            return;
-        }
-        if (!nombre) {
-            showMessage('Escribe el nombre del empleado', 'error');
-            return;
-        }
-    
-        try {
-            // Guardamos en la colección 'empleados' con el DNI como ID
-            await setDoc(doc(db, 'empleados', dni), {
-                dni: dni,
-                nombre: nombre,
-                depto: depto,
-                tipo: tipo,
-                fechaAlta: serverTimestamp()
-            });
-            showMessage(`✅ ${nombre} guardado en base de datos (${tipo})`);
-        } catch (e) {
-            console.error(e);
-            showMessage('Error al guardar', 'error');
-        }
-    });
-
     document.getElementById('dni').addEventListener('blur', async (e) => {
-      const dni = e.target.value.trim().toUpperCase();
-      if (!/^[0-9]{8}[A-Z]$/.test(dni)) return;
-      try {
-        const docRef = doc(db, 'empleados', dni);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const emp = docSnap.data();
-          document.getElementById('nombre').value = emp.nombre || '';
-          document.getElementById('tipo').value = emp.tipo || 'ETT';
-          document.getElementById('depto').value = emp.depto || '';
-          showMessage('✅ Datos auto-completados');
-        }
-      } catch (err) { console.error('Error:', err); }
+      const dni = e.target.value.trim().toUpperCase(); if(!/^[0-9]{8}[A-Z]$/.test(dni)) return;
+      try { const snap = await getDoc(doc(db,'empleados',dni)); if(snap.exists()) { const d=snap.data(); document.getElementById('nombre').value=d.nombre||''; document.getElementById('tipo').value=d.tipo||'ETT'; document.getElementById('depto').value=d.depto||''; showMessage('✅ Datos auto-completados'); } } catch(err){}
     });
-
     document.getElementById('btnEntrada').addEventListener('click', async () => {
-      const dni = document.getElementById('dni').value.trim().toUpperCase();
-      if (!/^[0-9]{8}[A-Z]$/.test(dni)) { showMessage('DNI no válido', 'error'); return; }
-      try {
-        await addDoc(collection(db, 'registros'), {
-          uid: currentUser.uid, tipo: document.getElementById('tipo').value, dni, 
-          nombre: document.getElementById('nombre').value.trim(),
-          depto: document.getElementById('depto').value.trim(), observaciones: document.getElementById('obs').value.trim(),
-          fecha: getTodayStr(), entrada: serverTimestamp(), estado: 'activo'
-        });
-        showMessage('✅ Entrada registrada');
-        ['dni','nombre','depto','obs'].forEach(id => document.getElementById(id).value = '');
-      } catch (e) { showMessage('Error al guardar', 'error'); }
+      const dni = document.getElementById('dni').value.trim().toUpperCase(); if(!/^[0-9]{8}[A-Z]$/.test(dni)) { showMessage('DNI no válido','error'); return; }
+      try { await addDoc(collection(db,'registros'), { uid:currentUser.uid, tipo:document.getElementById('tipo').value, dni, nombre:document.getElementById('nombre').value.trim(), depto:document.getElementById('depto').value.trim(), observaciones:document.getElementById('obs').value.trim(), fecha:getTodayStr(), entrada:serverTimestamp(), estado:'activo' }); showMessage('✅ Entrada registrada'); ['dni','nombre','depto','obs'].forEach(id=>document.getElementById(id).value=''); } 
+      catch(e) { showMessage('Error','error'); }
     });
-
     document.getElementById('btnSalida').addEventListener('click', async () => {
-      const dni = document.getElementById('dni').value.trim().toUpperCase();
-      const active = todayRecords.find(r => r.dni === dni && !r.salida);
-      if (!active) { showMessage('No hay entrada activa', 'error'); return; }
+      const dni = document.getElementById('dni').value.trim().toUpperCase(); const active = todayRecords.find(r=>r.dni===dni && !r.salida);
+      if(!active) { showMessage('No hay entrada activa','error'); return; }
+      try { await updateDoc(doc(db,'registros',active.id), {salida:serverTimestamp(), estado:'finalizado'}); showMessage('✅ Salida registrada'); document.getElementById('dni').value=''; } 
+      catch(e) { showMessage('Error','error'); }
+    });
+    document.getElementById('btnGuardarEmpleado').addEventListener('click', async () => {
+      const dni=document.getElementById('dni').value.trim().toUpperCase(), nombre=document.getElementById('nombre').value.trim(), depto=document.getElementById('depto').value.trim(), tipo=document.getElementById('tipo').value;
+      if(!/^[0-9]{8}[A-Z]$/.test(dni)||!nombre) { showMessage('DNI o Nombre faltantes','error'); return; }
+      try { await setDoc(doc(db,'empleados',dni), {dni,nombre,depto,tipo,fechaAlta:serverTimestamp()}); showMessage(`✅ ${nombre} guardado`); } catch(e){ showMessage('Error','error'); }
+    });
+
+    // ACTIONS LLAVES
+    async function loadKeysMaster() {
+      const snap = await getDocs(collection(db,'llaves'));
+      keysMap = {}; snap.forEach(d => keysMap[d.id] = d.data());
+    }
+    window.returnKey = async (logId, keyNum) => {
       try {
-        await updateDoc(doc(db, 'registros', active.id), { salida: serverTimestamp(), estado: 'finalizado' });
-        showMessage('✅ Salida registrada');
-        document.getElementById('dni').value = '';
-      } catch (e) { showMessage('Error', 'error'); }
+        await updateDoc(doc(db,'registro_llaves',logId), {horaEntrega:serverTimestamp(), estado:'finalizada'});
+        await updateDoc(doc(db,'llaves',keyNum), {estado:'disponible'});
+        keysMap[keyNum].estado = 'disponible'; loadKeysDropdown(); showMessage('✅ Llave devuelta');
+      } catch(e) { showMessage('Error al devolver','error'); }
+    };
+    document.getElementById('btnRetirar').addEventListener('click', async () => {
+      const keyNum = document.getElementById('llaveSelect').value;
+      const persona = document.getElementById('personaLlave').value.trim();
+      if(!keyNum || !persona) { showMessage('Selecciona llave y persona','error'); return; }
+      if(keysMap[keyNum]?.estado !== 'disponible') { showMessage('Llave ya prestada','error'); return; }
+      try {
+        await addDoc(collection(db,'registro_llaves'), { uid:currentUser.uid, fecha:getTodayStr(), llaveNumero:keyNum, llaveNombre:keysMap[keyNum].nombre, persona, observaciones:document.getElementById('obsLlave').value.trim(), horaRetiro:serverTimestamp(), estado:'activa' });
+        await updateDoc(doc(db,'llaves',keyNum), {estado:'prestada'});
+        keysMap[keyNum].estado = 'prestada'; loadKeysDropdown();
+        showMessage('✅ Llave retirada'); document.getElementById('personaLlave').value=''; document.getElementById('obsLlave').value='';
+      } catch(e) { showMessage('Error','error'); }
+    });
+    document.getElementById('btnEntregar').addEventListener('click', async () => {
+      const keyNum = document.getElementById('llaveSelect').value;
+      if(!keyNum) { showMessage('Selecciona una llave','error'); return; }
+      const activeLog = todayKeys.find(k => k.llaveNumero===keyNum && k.estado==='activa');
+      if(!activeLog) { showMessage('Esta llave no está prestada hoy','error'); return; }
+      window.returnKey(activeLog.id, keyNum);
     });
 
+    // EXPORT
     document.getElementById('btnExport').addEventListener('click', () => {
-      const filtered = currentFilter === 'todos' ? todayRecords : todayRecords.filter(r => r.tipo === currentFilter);
-      const data = filtered.map(r => ({
-        "Tipo": r.tipo, "Nombre": r.nombre || '', "DNI": r.dni, "Fecha": r.fecha,
-        "Entrada": fmtDate(r.entrada), "Salida": fmtDate(r.salida),
-        "Total": r.salida ? calcDuration(r.entrada, r.salida).replace(/<[^>]*>/g, '') : '-',
-        "Depto": r.depto || '', "Obs": r.observaciones || ''
-      }));
-      const ws = XLSX.utils.json_to_sheet(data);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Registro');
-      XLSX.writeFile(wb, `Registro_${getTodayStr()}.xlsx`);
+      if(currentFilter === 'Llaves') {
+        const data = todayKeys.map(k => ({ "Nº Llave": k.llaveNumero, "Nombre Llave": k.llaveNombre, "Persona": k.persona, "Hora Retiro": fmtDate(k.horaRetiro), "Hora Entrega": fmtDate(k.horaEntrega), "Duración": k.horaEntrega ? calcDuration(k.horaRetiro, k.horaEntrega).replace(/<[^>]*>/g,'') : '-', "Estado": k.estado==='activa'?'Prestada':'Devuelta' }));
+        const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Llaves'); XLSX.writeFile(wb, `Llaves_${getTodayStr()}.xlsx`);
+      } else {
+        const filtered = currentFilter==='todos' ? todayRecords : todayRecords.filter(r=>r.tipo===currentFilter);
+        const data = filtered.map(r => ({ "Tipo":r.tipo, "Nombre":r.nombre||'', "DNI":r.dni, "Fecha":r.fecha, "Entrada":fmtDate(r.entrada), "Salida":fmtDate(r.salida), "Total":r.salida?calcDuration(r.entrada,r.salida).replace(/<[^>]*>/g,''):'-', "Depto":r.depto||'', "Obs":r.observaciones||'' }));
+        const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Personal'); XLSX.writeFile(wb, `Personal_${getTodayStr()}.xlsx`);
+      }
     });
 
+    // IMPORT PERSONAL
     document.getElementById('btnImport').addEventListener('click', () => document.getElementById('importModal').classList.remove('hidden'));
-
     document.getElementById('btnProcessImport').addEventListener('click', async () => {
-      const file = document.getElementById('csvFile').files[0];
-      if (!file) return alert('Selecciona un archivo');
-      
-      const status = document.getElementById('importStatus');
-      status.classList.remove('hidden'); status.textContent = 'Leyendo archivo...';
-
+      const file = document.getElementById('csvFile').files[0]; if(!file) return alert('Selecciona archivo');
+      const status = document.getElementById('importStatus'); status.classList.remove('hidden'); status.textContent='Leyendo...';
       const reader = new FileReader();
       reader.onload = async (e) => {
         try {
-          const wb = XLSX.read(e.target.result, {type: 'binary'});
-          const ws = wb.Sheets[wb.SheetNames[0]];
-          const data = XLSX.utils.sheet_to_json(ws, {header: 1});
-          
-          if (!data || data.length < 2) throw new Error('Archivo vacío');
-          
-          const headers = data[0].map(h => h.toString().toLowerCase().trim());
-          const idxDNI = headers.findIndex(h => h.includes('dni'));
-          const idxNombre = headers.findIndex(h => h.includes('nombre') || h.includes('name'));
-          const idxDepto = headers.findIndex(h => h.includes('departamento') || h.includes('depto') || h.includes('empresa') || h.includes('lugar'));
-          const idxTipo = headers.findIndex(h => h.includes('tipo') || h.includes('type'));
-
-          if (idxDNI === -1) throw new Error('No se encontró columna DNI');
-          
-          status.textContent = `Procesando ${data.length - 1} registros...`;
-          let batch = writeBatch(db);
-          let count = 0;
-          
-          for (let i = 1; i < data.length; i++) {
-            const row = data[i];
-            if (!row) continue;
-            const dni = row[idxDNI] ? row[idxDNI].toString().trim().toUpperCase() : '';
-            if (!dni) continue;
-            
-            const nombre = idxNombre !== -1 ? (row[idxNombre] || '').toString().trim() : '';
-            const depto = idxDepto !== -1 ? (row[idxDepto] || '').toString().trim() : '';
-            const tipo = idxTipo !== -1 ? (row[idxTipo] || 'ETT').toString().trim() : 'ETT';
-            
-            batch.set(doc(db, 'empleados', dni), { dni, nombre, depto, tipo });
-            count++;
-            if (count % 450 === 0) { await batch.commit(); batch = writeBatch(db); }
+          const wb = XLSX.read(e.target.result, {type:'binary'}); const ws = wb.Sheets[wb.SheetNames[0]]; const data = XLSX.utils.sheet_to_json(ws, {header:1});
+          if(!data||data.length<2) throw new Error('Archivo vacío');
+          const headers = data[0].map(h=>h.toString().toLowerCase().trim());
+          const idxDNI = headers.findIndex(h=>h.includes('dni')), idxNombre = headers.findIndex(h=>h.includes('nombre')), idxDepto = headers.findIndex(h=>h.includes('departamento')||h.includes('empresa')), idxTipo = headers.findIndex(h=>h.includes('tipo'));
+          if(idxDNI===-1) throw new Error('Falta columna DNI');
+          status.textContent=`Procesando ${data.length-1}...`; let batch=writeBatch(db), count=0;
+          for(let i=1;i<data.length;i++) {
+            const row=data[i]; if(!row) continue;
+            const dni=row[idxDNI]?.toString().trim().toUpperCase(); if(!dni) continue;
+            batch.set(doc(db,'empleados',dni), { dni, nombre:idxNombre!==-1?row[idxNombre]?.toString().trim():'', depto:idxDepto!==-1?row[idxDepto]?.toString().trim():'', tipo:idxTipo!==-1?row[idxTipo]?.toString().trim():'ETT' });
+            count++; if(count%450===0){ await batch.commit(); batch=writeBatch(db); }
           }
-          if (count % 450 !== 0) await batch.commit();
-          
-          status.textContent = `✅ ${count} empleados importados`;
-          setTimeout(() => document.getElementById('importModal').classList.add('hidden'), 2000);
-        } catch (err) {
-          status.textContent = '❌ Error: ' + err.message;
-          status.classList.add('text-red-400');
-        }
-      };
-      reader.readAsBinaryString(file);
+          if(count%450!==0) await batch.commit();
+          status.textContent=`✅ ${count} importados`; setTimeout(()=>document.getElementById('importModal').classList.add('hidden'),2000);
+        } catch(err) { status.textContent='❌ '+err.message; status.classList.add('text-red-400'); }
+      }; reader.readAsBinaryString(file);
     });
+
+    // IMPORT LLAVES
+    document.getElementById('btnImportLlaves').addEventListener('click', () => document.getElementById('importLlavesModal').classList.remove('hidden'));
+    document.getElementById('btnProcessImportLlaves').addEventListener('click', async () => {
+      const file = document.getElementById('csvFileLlaves').files[0]; if(!file) return alert('Selecciona archivo');
+      const status = document.getElementById('importStatusLlaves'); status.classList.remove('hidden'); status.textContent='Leyendo...';
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const wb = XLSX.read(e.target.result, {type:'binary'}); const ws = wb.Sheets[wb.SheetNames[0]]; const data = XLSX.utils.sheet_to_json(ws, {header:1});
+          if(!data||data.length<2) throw new Error('Archivo vacío');
+          const headers = data[0].map(h=>h.toString().toLowerCase().trim());
+          const idxNum = headers.findIndex(h=>h.includes('numero')||h.includes('nº')||h.includes('#')), idxNom = headers.findIndex(h=>h.includes('nombre'));
+          if(idxNum===-1) throw new Error('Falta columna Número');
+          status.textContent=`Procesando ${data.length-1}...`; let batch=writeBatch(db), count=0;
+          for(let i=1;i<data.length;i++) {
+            const row=data[i]; if(!row) continue;
+            const num=row[idxNum]?.toString().trim(); if(!num) continue;
+            batch.set(doc(db,'llaves',num), { numero:num, nombre:idxNom!==-1?row[idxNom]?.toString().trim():'', estado:'disponible' });
+            count++; if(count%450===0){ await batch.commit(); batch=writeBatch(db); }
+          }
+          if(count%450!==0) await batch.commit();
+          await loadKeysMaster(); loadKeysDropdown();
+          status.textContent=`✅ ${count} llaves importadas`; setTimeout(()=>document.getElementById('importLlavesModal').classList.add('hidden'),2000);
+        } catch(err) { status.textContent='❌ '+err.message; status.classList.add('text-red-400'); }
+      }; reader.readAsBinaryString(file);
+    });
+
+    // Init
+    loadKeysMaster();
   </script>
 </body>
 </html>
