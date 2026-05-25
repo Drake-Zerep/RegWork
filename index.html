@@ -11,10 +11,7 @@
       darkMode: 'class',
       theme: {
         extend: {
-          colors: {
-            primary: '#06b6d4', secondary: '#8b5cf6', accent: '#f59e0b',
-            dark: '#0f172a', darker: '#020617'
-          }
+          colors: { primary: '#06b6d4', secondary: '#8b5cf6', accent: '#f59e0b', dark: '#0f172a', darker: '#020617' }
         }
       }
     }
@@ -80,7 +77,7 @@
     <div class="flex gap-2 mb-6 glass-card p-2 rounded-xl">
       <button id="tab-todos" class="flex-1 py-3 px-4 rounded-lg tab-active font-medium" onclick="setFilter('todos')">👥 Todos</button>
       <button id="tab-ETT" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('ETT')">💼 ETT</button>
-      <button id="tab-Externos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Externos')"> Externos</button>
+      <button id="tab-Externos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Externos')">🌐 Externos</button>
       <button id="tab-Llaves" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Llaves')">🔑 Llaves</button>
     </div>
 
@@ -90,7 +87,7 @@
         <input id="dni" placeholder="DNI (12345678A)" class="input-field p-3 rounded-lg md:col-span-1 uppercase">
         <input id="nombre" placeholder="Nombre completo" class="input-field p-3 rounded-lg md:col-span-2">
         <select id="tipo" class="input-field p-3 rounded-lg">
-          <option value="ETT">💼 ETT</option>
+          <option value="ETT"> ETT</option>
           <option value="Externos">🌐 Externos</option>
         </select>
         <input id="depto" placeholder="Departamento / Empresa" class="input-field p-3 rounded-lg">
@@ -100,7 +97,7 @@
         <button id="btnEntrada" class="btn-primary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span>🟢</span> Registrar Entrada</button>
         <button id="btnSalida" class="btn-secondary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span>🟠</span> Registrar Salida</button>
         <button id="btnGuardarEmpleado" class="btn-db px-4 py-3 rounded-lg font-semibold text-white flex items-center gap-2 border border-purple-500/50">💾 Guardar Empleado</button>
-        <button id="btnImport" class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition">📥 CSV Personal</button>
+        <button id="btnImport" class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition"> CSV Personal</button>
       </div>
       <p id="formMsg" class="text-sm mt-3 hidden"></p>
     </div>
@@ -136,7 +133,7 @@
       </div>
       <div class="p-4 border-t border-slate-700/50 flex justify-end">
         <button id="btnExport" class="px-6 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold hover:shadow-lg hover:shadow-cyan-500/30 transition flex items-center gap-2">
-          <span>📊</span> Exportar Excel
+          <span></span> Exportar Excel
         </button>
       </div>
     </div>
@@ -160,7 +157,7 @@
   <div id="importLlavesModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="glass-card p-6 rounded-2xl w-full max-w-md">
       <h3 class="text-xl font-bold gradient-text mb-4">📥 Importar Llaves</h3>
-      <p class="text-slate-400 text-sm mb-4">CSV: Número, Nombre</p>
+      <p class="text-slate-400 text-sm mb-4">CSV: Número, Nombre (Soporta acentos y punto y coma)</p>
       <input type="file" id="csvFileLlaves" accept=".csv,.xlsx,.xls" class="block w-full text-sm mb-4 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary/20 file:text-primary hover:file:bg-primary/30">
       <div class="flex justify-end gap-3">
         <button onclick="document.getElementById('importLlavesModal').classList.add('hidden')" class="px-4 py-2 text-slate-400 hover:text-white transition">Cancelar</button>
@@ -193,7 +190,7 @@
     let todayRecords = [];
     let todayKeys = [];
     let currentFilter = 'todos';
-    let keysMap = {}; // { numero: { nombre, estado } }
+    let keysMap = {}; 
 
     document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -211,7 +208,6 @@
       el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000);
     }
 
-    // AUTH
     onAuthStateChanged(auth, (user) => {
       if (user) {
         currentUser = user;
@@ -236,7 +232,6 @@
     });
     document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
-    // FILTER & LOAD
     window.setFilter = function(filter) {
       currentFilter = filter;
       ['todos','ETT','Externos','Llaves'].forEach(f => {
@@ -245,7 +240,7 @@
       });
       document.getElementById('formEmpleados').classList.toggle('hidden', filter==='Llaves');
       document.getElementById('formLlaves').classList.toggle('hidden', filter!=='Llaves');
-      document.getElementById('mainTitle').textContent = filter==='Llaves' ? '🔑 Control de Llaves' : ' Registro Diario';
+      document.getElementById('mainTitle').textContent = filter==='Llaves' ? ' Control de Llaves' : '📋 Registro Diario';
       updateTableHeaders();
       loadToday();
     };
@@ -277,7 +272,6 @@
       }
     }
 
-    // RENDER EMPLEADOS
     function renderEmpleadosTable() {
       const tbody = document.getElementById('tableBody');
       const filtered = currentFilter==='todos' ? todayRecords : todayRecords.filter(r=>r.tipo===currentFilter);
@@ -285,12 +279,11 @@
       tbody.innerHTML = filtered.map(r => {
         const badgeClass = r.tipo==='ETT' ? 'badge-ett' : 'badge-externos';
         const rowClass = !r.salida ? 'table-row-active' : 'hover:bg-slate-800/30';
-        const actionBtn = !r.salida ? `<button onclick="window.quickCheckout('${r.dni}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition mx-auto">🟠 Salida</button>` : `<span class="text-slate-600 text-xs">Completado</span>`;
+        const actionBtn = !r.salida ? `<button onclick="window.quickCheckout('${r.dni}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition mx-auto"> Salida</button>` : `<span class="text-slate-600 text-xs">Completado</span>`;
         return `<tr class="${rowClass} transition-all"><td class="p-4"><span class="px-2 py-1 text-xs rounded-full ${badgeClass}">${r.tipo}</span></td><td class="p-4 font-medium">${r.nombre||'-'}</td><td class="p-4 font-mono text-xs text-slate-400">${r.dni}</td><td class="p-4 text-cyan-400">${fmtDate(r.entrada)}</td><td class="p-4 text-slate-400">${fmtDate(r.salida)}</td><td class="p-4">${calcDuration(r.entrada, r.salida)}</td><td class="p-4 text-slate-400">${r.depto||'-'}</td><td class="p-4 text-slate-500 text-xs max-w-xs truncate">${r.observaciones||'-'}</td><td class="p-4">${actionBtn}</td></tr>`;
       }).join('');
     }
 
-    // RENDER LLAVES
     function loadKeysDropdown() {
       const select = document.getElementById('llaveSelect');
       select.innerHTML = '<option value="">Seleccionar Llave...</option>';
@@ -310,7 +303,6 @@
       }).join('');
     }
 
-    // ACTIONS EMPLEADOS
     window.quickCheckout = async (dni) => {
       const active = todayRecords.find(r=>r.dni===dni && !r.salida);
       if(!active) { showMessage('No hay entrada activa','error'); return; }
@@ -338,7 +330,6 @@
       try { await setDoc(doc(db,'empleados',dni), {dni,nombre,depto,tipo,fechaAlta:serverTimestamp()}); showMessage(`✅ ${nombre} guardado`); } catch(e){ showMessage('Error','error'); }
     });
 
-    // ACTIONS LLAVES
     async function loadKeysMaster() {
       const snap = await getDocs(collection(db,'llaves'));
       keysMap = {}; snap.forEach(d => keysMap[d.id] = d.data());
@@ -370,7 +361,6 @@
       window.returnKey(activeLog.id, keyNum);
     });
 
-    // EXPORT
     document.getElementById('btnExport').addEventListener('click', () => {
       if(currentFilter === 'Llaves') {
         const data = todayKeys.map(k => ({ "Nº Llave": k.llaveNumero, "Nombre Llave": k.llaveNombre, "Persona": k.persona, "Hora Retiro": fmtDate(k.horaRetiro), "Hora Entrega": fmtDate(k.horaEntrega), "Duración": k.horaEntrega ? calcDuration(k.horaRetiro, k.horaEntrega).replace(/<[^>]*>/g,'') : '-', "Estado": k.estado==='activa'?'Prestada':'Devuelta' }));
@@ -382,7 +372,6 @@
       }
     });
 
-    // IMPORT PERSONAL
     document.getElementById('btnImport').addEventListener('click', () => document.getElementById('importModal').classList.remove('hidden'));
     document.getElementById('btnProcessImport').addEventListener('click', async () => {
       const file = document.getElementById('csvFile').files[0]; if(!file) return alert('Selecciona archivo');
@@ -408,34 +397,90 @@
       }; reader.readAsBinaryString(file);
     });
 
-    // IMPORT LLAVES
+    // IMPORT LLAVES - VERSIÓN ROBUSTA (Maneja acentos y punto y coma)
     document.getElementById('btnImportLlaves').addEventListener('click', () => document.getElementById('importLlavesModal').classList.remove('hidden'));
     document.getElementById('btnProcessImportLlaves').addEventListener('click', async () => {
-      const file = document.getElementById('csvFileLlaves').files[0]; if(!file) return alert('Selecciona archivo');
-      const status = document.getElementById('importStatusLlaves'); status.classList.remove('hidden'); status.textContent='Leyendo...';
+      const file = document.getElementById('csvFileLlaves').files[0]; 
+      if(!file) return alert('Selecciona un archivo CSV');
+      
+      const status = document.getElementById('importStatusLlaves'); 
+      status.classList.remove('hidden'); 
+      status.textContent = 'Leyendo archivo...';
+      
       const reader = new FileReader();
       reader.onload = async (e) => {
         try {
-          const wb = XLSX.read(e.target.result, {type:'binary'}); const ws = wb.Sheets[wb.SheetNames[0]]; const data = XLSX.utils.sheet_to_json(ws, {header:1});
-          if(!data||data.length<2) throw new Error('Archivo vacío');
-          const headers = data[0].map(h=>h.toString().toLowerCase().trim());
-          const idxNum = headers.findIndex(h=>h.includes('numero')||h.includes('nº')||h.includes('#')), idxNom = headers.findIndex(h=>h.includes('nombre'));
-          if(idxNum===-1) throw new Error('Falta columna Número');
-          status.textContent=`Procesando ${data.length-1}...`; let batch=writeBatch(db), count=0;
-          for(let i=1;i<data.length;i++) {
-            const row=data[i]; if(!row) continue;
-            const num=row[idxNum]?.toString().trim(); if(!num) continue;
-            batch.set(doc(db,'llaves',num), { numero:num, nombre:idxNom!==-1?row[idxNom]?.toString().trim():'', estado:'disponible' });
-            count++; if(count%450===0){ await batch.commit(); batch=writeBatch(db); }
+          const text = e.target.result;
+          
+          // 1. Detectar separador (coma o punto y coma)
+          const separator = text.includes(';') ? ';' : ',';
+          
+          // 2. Dividir por líneas
+          const lines = text.split(/\r\n|\n/).filter(line => line.trim() !== '');
+          if (lines.length < 2) throw new Error('El archivo está vacío');
+          
+          // 3. Procesar encabezados
+          const headersRaw = lines[0].split(separator);
+          // Normalizamos: minúsculas y sin acentos para asegurar match
+          const headers = headersRaw.map(h => 
+            h.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          );
+          
+          // Buscar índices
+          const idxNum = headers.findIndex(h => h.includes('numero') || h === 'n' || h === '#');
+          const idxNom = headers.findIndex(h => h.includes('nombre'));
+          
+          if (idxNum === -1) {
+            throw new Error('No se encontró la columna "Número". (Headers: ' + headersRaw.join(', ') + ')');
           }
-          if(count%450!==0) await batch.commit();
-          await loadKeysMaster(); loadKeysDropdown();
-          status.textContent=`✅ ${count} llaves importadas`; setTimeout(()=>document.getElementById('importLlavesModal').classList.add('hidden'),2000);
-        } catch(err) { status.textContent='❌ '+err.message; status.classList.add('text-red-400'); }
-      }; reader.readAsBinaryString(file);
+          
+          status.textContent = `Procesando ${lines.length - 1} llaves...`;
+          let batch = writeBatch(db);
+          let count = 0;
+          
+          // 4. Procesar datos
+          for (let i = 1; i < lines.length; i++) {
+            const cols = lines[i].split(separator);
+            if (!cols || cols.length === 0) continue;
+            
+            const num = cols[idxNum] ? cols[idxNum].trim() : '';
+            if (!num) continue; // Saltar filas vacías
+            
+            const nombre = idxNom !== -1 && cols[idxNom] ? cols[idxNom].trim() : '';
+            
+            // Guardar en Firebase
+            batch.set(doc(db, 'llaves', num), { 
+              numero: num, 
+              nombre: nombre, 
+              estado: 'disponible' 
+            });
+            count++;
+            
+            if (count % 450 === 0) { 
+              await batch.commit(); 
+              batch = writeBatch(db); 
+            }
+          }
+          
+          if (count % 450 !== 0 && count > 0) await batch.commit();
+          
+          // Recargar dropdown
+          await loadKeysMaster(); 
+          loadKeysDropdown();
+          
+          status.textContent = `✅ ${count} llaves importadas correctamente`; 
+          status.classList.remove('text-red-400');
+          setTimeout(() => document.getElementById('importLlavesModal').classList.add('hidden'), 2000);
+          
+        } catch (err) { 
+          console.error(err);
+          status.textContent = ' ' + err.message; 
+          status.classList.add('text-red-400'); 
+        }
+      };
+      reader.readAsText(file, 'UTF-8');
     });
 
-    // Init
     loadKeysMaster();
   </script>
 </body>
