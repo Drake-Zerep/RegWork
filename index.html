@@ -27,7 +27,7 @@
   </div>
 
   <!-- DASHBOARD -->
-  <div id="dashboardView" class="hidden flex-1 flex flex-col p-4 md:p-8 max-w-5xl mx-auto w-full">
+  <div id="dashboardView" class="hidden flex-1 flex flex-col p-4 md:p-8 max-w-6xl mx-auto w-full">
     <header class="flex justify-between items-center mb-4">
       <h1 class="text-2xl font-bold text-gray-900">📋 Registro Diario</h1>
       <button id="logoutBtn" class="text-sm text-gray-500 hover:text-red-600">Cerrar sesión</button>
@@ -35,21 +35,21 @@
 
     <!-- TABS -->
     <div class="flex gap-4 mb-4 border-b">
-      <button class="pb-2 px-2 tab-active" data-filter="todos" onclick="setFilter('todos')">Todos</button>
-      <button class="pb-2 px-2 tab-inactive" data-filter="ETT" onclick="setFilter('ETT')">ETT</button>
-      <button class="pb-2 px-2 tab-inactive" data-filter="Externos" onclick="setFilter('Externos')">Externos</button>
+      <button id="tab-todos" class="pb-2 px-2 tab-active" onclick="setFilter('todos')">Todos</button>
+      <button id="tab-ETT" class="pb-2 px-2 tab-inactive" onclick="setFilter('ETT')">ETT</button>
+      <button id="tab-Externos" class="pb-2 px-2 tab-inactive" onclick="setFilter('Externos')">Externos</button>
     </div>
 
     <!-- FORM -->
     <div class="bg-white p-5 rounded-xl shadow-sm mb-6 grid grid-cols-1 md:grid-cols-6 gap-3">
-      <input id="dni" placeholder="DNI (12345678A)" class="p-2 border rounded uppercase focus:ring-2 focus:ring-blue-500 outline-none md:col-span-1">
+      <input id="dni" placeholder="DNI (12345678A)" class="p-2 border rounded uppercase focus:ring-2 focus:ring-blue-500 outline-none">
       <input id="nombre" placeholder="Nombre" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none md:col-span-2">
-      <select id="tipo" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none md:col-span-1">
+      <select id="tipo" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
         <option value="ETT">ETT</option>
         <option value="Externos">Externos</option>
       </select>
-      <input id="depto" placeholder="Departamento" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none md:col-span-1">
-      <input id="obs" placeholder="Observaciones" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none md:col-span-1">
+      <input id="depto" placeholder="Departamento" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+      <input id="obs" placeholder="Observaciones" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
       <div class="md:col-span-6 flex gap-2 mt-1">
         <button id="btnEntrada" class="flex-1 bg-green-600 text-white py-2 rounded hover:bg-green-700 transition font-medium">🟢 Entrada</button>
         <button id="btnSalida" class="flex-1 bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition font-medium">🟠 Salida</button>
@@ -88,9 +88,9 @@
   <!-- IMPORT MODAL -->
   <div id="importModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
     <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
-      <h3 class="text-lg font-bold mb-3">📥 Importar Listado de Empleados</h3>
-      <p class="text-sm text-gray-600 mb-4">Sube un CSV con columnas: <code>DNI, Nombre, Tipo, Departamento</code></p>
-      <input type="file" id="csvFile" accept=".csv,.xlsx,.xls" class="block w-full text-sm mb-4 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+      <h3 class="text-lg font-bold mb-3">📥 Importar Listado</h3>
+      <p class="text-sm text-gray-600 mb-4">CSV con columnas: DNI, Nombre, Tipo, Departamento</p>
+      <input type="file" id="csvFile" accept=".csv,.xlsx,.xls" class="block w-full text-sm mb-4">
       <div class="flex justify-end gap-2">
         <button onclick="document.getElementById('importModal').classList.add('hidden')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancelar</button>
         <button id="btnProcessImport" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Procesar</button>
@@ -99,12 +99,12 @@
     </div>
   </div>
 
-    <script type="module">
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, collection, addDoc, updateDoc, doc, query, where, onSnapshot, serverTimestamp, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // 🔑 PEGA TU FIREBASE CONFIG AQUÍ (sin comillas extra, tal cual te lo da Firebase)
+    // ⚠️ REEMPLAZA ESTO CON TU CONFIG DE FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyAVT8XCk0Ji-sgENTImSsmGE1UO2i7vBkA",
       authDomain: "regwork-19628.firebaseapp.com",
@@ -114,110 +114,155 @@
       appId: "1:431109000889:web:d1072b49b0b1d795255568"
     };
 
+    // Inicializar Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    
+    // Variables globales
     let currentUser = null;
     let todayRecords = [];
     let currentFilter = 'todos';
 
-    // Helpers
-    const fmtDate = (ts) => ts ? new Date(ts.seconds * 1000).toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'}) : '-';
-    const calcDuration = (start, end) => {
-      if (!end) return '-';
+    // Funciones helper
+    function fmtDate(ts) {
+      if (!ts) return '-';
+      return new Date(ts.seconds * 1000).toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+    }
+
+    function calcDuration(start, end) {
+      if (!end || !start) return '-';
       const ms = end.seconds * 1000 - start.seconds * 1000;
       const h = Math.floor(ms / 3600000);
       const m = Math.floor((ms % 3600000) / 60000);
-      return `${h}h ${m}m`;
-    };
-    const getTodayStr = () => new Date().toISOString().split('T')[0];
-    const msg = (t, type='info') => { 
-      const e = document.getElementById('formMsg'); 
-      e.textContent = t; 
-      e.className = `text-sm mt-1 md:col-span-6 ${type==='error'?'text-red-500':'text-green-600'}`; 
-      e.classList.remove('hidden'); 
-      setTimeout(()=>e.classList.add('hidden'), 3000); 
-    };
+      return h + 'h ' + m + 'm';
+    }
 
-    // Auth
-    onAuthStateChanged(auth, user => {
-      console.log('🔄 Auth state:', user ? 'Logueado' : 'No logueado');
-      if (user) { 
-        currentUser = user; 
-        document.getElementById('loginView').classList.add('hidden'); 
-        document.getElementById('dashboardView').classList.remove('hidden'); 
-        loadToday(); 
-      } else { 
-        document.getElementById('loginView').classList.remove('hidden'); 
-        document.getElementById('dashboardView').classList.add('hidden'); 
+    function getTodayStr() {
+      return new Date().toISOString().split('T')[0];
+    }
+
+    function showMessage(text, type) {
+      const el = document.getElementById('formMsg');
+      el.textContent = text;
+      el.className = 'text-sm mt-1 md:col-span-6 ' + (type === 'error' ? 'text-red-500' : 'text-green-600');
+      el.classList.remove('hidden');
+      setTimeout(() => el.classList.add('hidden'), 3000);
+    }
+
+    // Auth state observer
+    onAuthStateChanged(auth, (user) => {
+      console.log('Auth state:', user ? 'Logged in' : 'Logged out');
+      if (user) {
+        currentUser = user;
+        document.getElementById('loginView').classList.add('hidden');
+        document.getElementById('dashboardView').classList.remove('hidden');
+        loadToday();
+      } else {
+        currentUser = null;
+        document.getElementById('loginView').classList.remove('hidden');
+        document.getElementById('dashboardView').classList.add('hidden');
       }
     });
 
-    document.getElementById('loginForm').onsubmit = async (e) => { 
-      e.preventDefault(); 
+    // Login form
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
       const email = document.getElementById('email').value;
       const pass = document.getElementById('password').value;
-      const errEl = document.getElementById('loginError');
+      const errorEl = document.getElementById('loginError');
       
-      try { 
-        console.log('📡 Intentando login...');
-        await signInWithEmailAndPassword(auth, email, pass); 
-      } catch(err) { 
-        console.error('❌ Error Firebase:', err.code, err.message);
-        let errorMsg = 'Error al entrar';
-        if (err.code === 'auth/user-not-found') errorMsg = 'Usuario no registrado';
-        else if (err.code === 'auth/wrong-password') errorMsg = 'Contraseña incorrecta';
-        else if (err.code === 'auth/invalid-credential') errorMsg = 'Credenciales inválidas';
-        else if (err.code === 'auth/network-request-failed') errorMsg = 'Sin conexión o bloqueado';
-        errEl.textContent = errorMsg; 
-        errEl.classList.remove('hidden'); 
-      } 
-    };
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        errorEl.classList.add('hidden');
+      } catch (error) {
+        console.error('Login error:', error.code, error.message);
+        let msg = 'Error al entrar';
+        if (error.code === 'auth/user-not-found') msg = 'Usuario no registrado';
+        else if (error.code === 'auth/wrong-password') msg = 'Contraseña incorrecta';
+        else if (error.code === 'auth/invalid-credential') msg = 'Credenciales inválidas';
+        else if (error.code === 'auth/network-request-failed') msg = 'Sin conexión';
+        errorEl.textContent = msg;
+        errorEl.classList.remove('hidden');
+      }
+    });
 
-    document.getElementById('logoutBtn').onclick = () => signOut(auth);
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      signOut(auth);
+    });
 
-    // Filter Tabs
-    window.setFilter = (f) => {
-      currentFilter = f;
-      document.querySelectorAll('button[data-filter]').forEach(b => {
-        b.classList.toggle('tab-active', b.dataset.filter === f);
-        b.classList.toggle('tab-inactive', b.dataset.filter !== f);
-      });
-      renderTable();
-    };
-
-    // Firestore
-    const loadToday = () => {
-      const q = query(collection(db, 'registros'), where('uid', '==', currentUser.uid), where('fecha', '==', getTodayStr()));
-      onSnapshot(q, (snap) => {
+    // Cargar registros de hoy
+    function loadToday() {
+      const q = query(
+        collection(db, 'registros'), 
+        where('uid', '==', currentUser.uid), 
+        where('fecha', '==', getTodayStr())
+      );
+      
+      onSnapshot(q, (snapshot) => {
         todayRecords = [];
-        snap.forEach(d => todayRecords.push({ id: d.id, ...d.data() }));
-        todayRecords.sort((a,b) => (b.entrada?.seconds || 0) - (a.entrada?.seconds || 0));
+        snapshot.forEach((doc) => {
+          todayRecords.push({ id: doc.id, ...doc.data() });
+        });
+        todayRecords.sort((a, b) => (b.entrada?.seconds || 0) - (a.entrada?.seconds || 0));
         renderTable();
-      }, (err) => console.error('🔥 Error Firestore:', err));
-    };
+      }, (error) => {
+        console.error('Error loading records:', error);
+      });
+    }
 
-    const renderTable = () => {
+    // Renderizar tabla
+    function renderTable() {
       const tbody = document.getElementById('tableBody');
-      const filtered = currentFilter === 'todos' ? todayRecords : todayRecords.filter(r => r.tipo === currentFilter);
-      if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="8" class="p-4 text-center text-gray-400">Sin registros</td></tr>'; return; }
-      tbody.innerHTML = filtered.map(r => `
-        <tr class="hover:bg-gray-50 ${!r.salida ? 'bg-green-50' : ''}">
-          <td class="p-3"><span class="px-2 py-1 text-xs rounded-full ${r.tipo==='ETT'?'bg-purple-100 text-purple-800':'bg-blue-100 text-blue-800'}">${r.tipo}</span></td>
+      const filtered = currentFilter === 'todos' 
+        ? todayRecords 
+        : todayRecords.filter(r => r.tipo === currentFilter);
+      
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="p-4 text-center text-gray-400">Sin registros hoy</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = filtered.map(r => {
+        const tipoClass = r.tipo === 'ETT' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800';
+        const rowClass = !r.salida ? 'bg-green-50' : '';
+        
+        return `<tr class="hover:bg-gray-50 ${rowClass}">
+          <td class="p-3"><span class="px-2 py-1 text-xs rounded-full ${tipoClass}">${r.tipo}</span></td>
           <td class="p-3 font-medium">${r.nombre || '-'}</td>
           <td class="p-3 font-mono text-xs">${r.dni}</td>
           <td class="p-3">${fmtDate(r.entrada)}</td>
           <td class="p-3">${fmtDate(r.salida)}</td>
           <td class="p-3 font-semibold text-blue-700">${calcDuration(r.entrada, r.salida)}</td>
           <td class="p-3">${r.depto || '-'}</td>
-          <td class="p-3 max-w-xs truncate" title="${r.observaciones || ''}">${r.observaciones || '-'}</td>
-        </tr>`).join('');
+          <td class="p-3 max-w-xs truncate">${r.observaciones || '-'}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    // Función global para filtros
+    window.setFilter = function(filter) {
+      currentFilter = filter;
+      // Actualizar tabs
+      ['todos', 'ETT', 'Externos'].forEach(f => {
+        const btn = document.getElementById('tab-' + f);
+        if (f === filter) {
+          btn.classList.remove('tab-inactive');
+          btn.classList.add('tab-active');
+        } else {
+          btn.classList.remove('tab-active');
+          btn.classList.add('tab-inactive');
+        }
+      });
+      renderTable();
     };
 
-    // Auto-fill from empleados collection
+    // Autocompletar desde empleados
     document.getElementById('dni').addEventListener('blur', async (e) => {
       const dni = e.target.value.trim().toUpperCase();
       if (!/^[0-9]{8}[A-Z]$/.test(dni)) return;
+      
       try {
         const q = query(collection(db, 'empleados'), where('dni', '==', dni));
         const snap = await getDocs(q);
@@ -226,41 +271,70 @@
           document.getElementById('nombre').value = emp.nombre || '';
           document.getElementById('tipo').value = emp.tipo || 'ETT';
           document.getElementById('depto').value = emp.depto || '';
-          msg('✅ Datos auto-completados');
+          showMessage('Datos auto-completados');
         }
-      } catch(err) { console.warn('⚠️ No se pudo autocompletar:', err); }
+      } catch (err) {
+        console.warn('No se pudo autocompletar:', err);
+      }
     });
 
-    // Acciones
-    document.getElementById('btnEntrada').onclick = async () => {
+    // Botón Entrada
+    document.getElementById('btnEntrada').addEventListener('click', async () => {
       const dni = document.getElementById('dni').value.trim().toUpperCase();
-      if (!/^[0-9]{8}[A-Z]$/.test(dni)) return msg('DNI no válido', 'error');
+      if (!/^[0-9]{8}[A-Z]$/.test(dni)) {
+        showMessage('DNI no válido (ej: 12345678A)', 'error');
+        return;
+      }
+      
       try {
         await addDoc(collection(db, 'registros'), {
-          uid: currentUser.uid, tipo: document.getElementById('tipo').value, dni, 
+          uid: currentUser.uid,
+          tipo: document.getElementById('tipo').value,
+          dni: dni,
           nombre: document.getElementById('nombre').value.trim(),
-          depto: document.getElementById('depto').value.trim(), observaciones: document.getElementById('obs').value.trim(),
-          fecha: getTodayStr(), entrada: serverTimestamp(), estado: 'activo'
+          depto: document.getElementById('depto').value.trim(),
+          observaciones: document.getElementById('obs').value.trim(),
+          fecha: getTodayStr(),
+          entrada: serverTimestamp(),
+          estado: 'activo'
         });
-        msg('✅ Entrada registrada');
-        ['dni','nombre','depto','obs'].forEach(id => document.getElementById(id).value = '');
-      } catch(e) { console.error(e); msg('Error al guardar', 'error'); }
-    };
+        showMessage('✅ Entrada registrada');
+        ['dni', 'nombre', 'depto', 'obs'].forEach(id => document.getElementById(id).value = '');
+      } catch (error) {
+        console.error(error);
+        showMessage('Error al guardar', 'error');
+      }
+    });
 
-    document.getElementById('btnSalida').onclick = async () => {
+    // Botón Salida
+    document.getElementById('btnSalida').addEventListener('click', async () => {
       const dni = document.getElementById('dni').value.trim().toUpperCase();
       const active = todayRecords.find(r => r.dni === dni && !r.salida);
-      if (!active) return msg('No hay entrada activa para ese DNI hoy', 'error');
+      
+      if (!active) {
+        showMessage('No hay entrada activa para ese DNI', 'error');
+        return;
+      }
+      
       try {
-        await updateDoc(doc(db, 'registros', active.id), { salida: serverTimestamp(), estado: 'finalizado' });
-        msg('✅ Salida registrada');
+        await updateDoc(doc(db, 'registros', active.id), {
+          salida: serverTimestamp(),
+          estado: 'finalizado'
+        });
+        showMessage('✅ Salida registrada');
         document.getElementById('dni').value = '';
-      } catch(e) { console.error(e); msg('Error al actualizar', 'error'); }
-    };
+      } catch (error) {
+        console.error(error);
+        showMessage('Error al actualizar', 'error');
+      }
+    });
 
-    // Export
-    document.getElementById('btnExport').onclick = () => {
-      const filtered = currentFilter === 'todos' ? todayRecords : todayRecords.filter(r => r.tipo === currentFilter);
+    // Exportar Excel
+    document.getElementById('btnExport').addEventListener('click', () => {
+      const filtered = currentFilter === 'todos' 
+        ? todayRecords 
+        : todayRecords.filter(r => r.tipo === currentFilter);
+      
       const data = filtered.map(r => ({
         "Tipo": r.tipo,
         "Nombre del empleado": r.nombre || '',
@@ -272,21 +346,28 @@
         "Observaciones": r.observaciones || '',
         "Departamento": r.depto || ''
       }));
+      
       const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, `Registro_${getTodayStr()}`);
-      XLSX.writeFile(wb, `Registro_${currentFilter}_${getTodayStr()}.xlsx`);
-    };
+      XLSX.utils.book_append_sheet(wb, ws, 'Registro_' + getTodayStr());
+      XLSX.writeFile(wb, 'Registro_' + currentFilter + '_' + getTodayStr() + '.xlsx');
+    });
 
-    // Import CSV
-    document.getElementById('btnImport').onclick = () => document.getElementById('importModal').classList.remove('hidden');
-    document.getElementById('importModal').classList.add('hidden');
+    // Importar CSV
+    document.getElementById('btnImport').addEventListener('click', () => {
+      document.getElementById('importModal').classList.remove('hidden');
+    });
 
-    document.getElementById('btnProcessImport').onclick = async () => {
+    document.getElementById('btnProcessImport').addEventListener('click', async () => {
       const file = document.getElementById('csvFile').files[0];
-      if (!file) return alert('Selecciona un archivo');
+      if (!file) {
+        alert('Selecciona un archivo');
+        return;
+      }
+      
       const status = document.getElementById('importStatus');
-      status.classList.remove('hidden'); status.textContent = 'Leyendo archivo...';
+      status.classList.remove('hidden');
+      status.textContent = 'Leyendo archivo...';
 
       const reader = new FileReader();
       reader.onload = async (e) => {
@@ -295,28 +376,46 @@
           const ws = wb.Sheets[wb.SheetNames[0]];
           const data = XLSX.utils.sheet_to_json(ws);
           
-          if (!data.length || !data[0].DNI) throw new Error('Formato incorrecto. Necesita columna DNI');
+          if (!data.length || !data[0].DNI) {
+            throw new Error('Formato incorrecto. Necesita columna DNI');
+          }
           
-          status.textContent = `Procesando ${data.length} registros...`;
+          status.textContent = 'Procesando ' + data.length + ' registros...';
           let batch = writeBatch(db);
           let count = 0;
           
-          data.forEach(row => {
-            const ref = doc(db, 'empleados', row.DNI.replace(/\s/g,''));
-            batch.set(ref, { dni: row.DNI, nombre: row.Nombre || '', tipo: row.Tipo || 'ETT', depto: row.Departamento || '' });
+          data.forEach((row, index) => {
+            const ref = doc(db, 'empleados', row.DNI.toString().replace(/\s/g, ''));
+            batch.set(ref, {
+              dni: row.DNI,
+              nombre: row.Nombre || '',
+              tipo: row.Tipo || 'ETT',
+              depto: row.Departamento || ''
+            });
             count++;
+            
             if (count % 450 === 0) {
-              await batch.commit();
+              batch.commit();
               batch = writeBatch(db);
             }
           });
-          if (count % 450 !== 0) await batch.commit();
-          status.textContent = `✅ ${count} empleados importados correctamente`;
-          setTimeout(() => document.getElementById('importModal').classList.add('hidden'), 2000);
-        } catch(err) { console.error(err); status.textContent = `❌ Error: ${err.message}`; status.classList.add('text-red-600'); }
+          
+          if (count % 450 !== 0) {
+            await batch.commit();
+          }
+          
+          status.textContent = '✅ ' + count + ' empleados importados';
+          setTimeout(() => {
+            document.getElementById('importModal').classList.add('hidden');
+          }, 2000);
+        } catch (err) {
+          console.error(err);
+          status.textContent = '❌ Error: ' + err.message;
+          status.classList.add('text-red-600');
+        }
       };
       reader.readAsBinaryString(file);
-    };
+    });
   </script>
 </body>
 </html>
