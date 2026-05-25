@@ -39,7 +39,6 @@
     .badge-externos { background: rgba(6, 182, 212, 0.2); border: 1px solid rgba(6, 182, 212, 0.5); color: #22d3ee; }
     .badge-prestada { background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.5); color: #fbbf24; }
     .grid-bg { background-image: linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px); background-size: 50px 50px; }
-    /* Input Date Dark Mode Fix */
     input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
   </style>
 </head>
@@ -69,10 +68,9 @@
   <div id="dashboardView" class="hidden flex-1 flex flex-col p-4 md:p-8 max-w-7xl mx-auto w-full relative z-10">
     <header class="flex justify-between items-center mb-6 glass-card p-4 rounded-xl">
       <div>
-        <h1 class="text-3xl font-bold gradient-text neon-text" id="mainTitle"> Registro Diario</h1>
+        <h1 class="text-3xl font-bold gradient-text neon-text" id="mainTitle">📋 Registro Diario</h1>
         <div class="flex items-center gap-4 mt-1">
             <p class="text-slate-400 text-sm" id="currentDate"></p>
-            <!-- NUEVO: Selector de Fecha -->
             <input type="date" id="dateFilter" class="input-field p-1.5 rounded-lg text-sm w-32" title="Seleccionar fecha">
             <button id="btnHoy" class="hidden px-3 py-1 rounded-lg bg-slate-700 text-slate-300 text-xs hover:bg-slate-600 border border-slate-600">🔄 Hoy</button>
         </div>
@@ -80,13 +78,38 @@
       <button id="logoutBtn" class="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 transition">Cerrar sesión</button>
     </header>
 
+    <!-- NUEVO: ESTADÍSTICAS EN TIEMPO REAL -->
+    <div id="statsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="glass-card p-4 rounded-xl flex items-center justify-between hover:border-primary/50 transition-all cursor-default">
+        <div>
+            <p class="text-slate-400 text-xs uppercase font-bold tracking-wider">Personal Dentro</p>
+            <h3 id="statPeople" class="text-3xl font-bold text-white neon-text">0</h3>
+        </div>
+        <div class="p-3 bg-blue-500/20 rounded-full text-blue-400 text-2xl animate-pulse">👥</div>
+      </div>
+      <div class="glass-card p-4 rounded-xl flex items-center justify-between hover:border-secondary/50 transition-all cursor-default">
+        <div>
+            <p class="text-slate-400 text-xs uppercase font-bold tracking-wider">Llaves Prestadas</p>
+            <h3 id="statKeys" class="text-3xl font-bold text-white neon-text">0</h3>
+        </div>
+        <div class="p-3 bg-orange-500/20 rounded-full text-orange-400 text-2xl animate-pulse">🔑</div>
+      </div>
+      <div class="glass-card p-4 rounded-xl flex items-center justify-between hover:border-accent/50 transition-all cursor-default">
+        <div>
+            <p class="text-slate-400 text-xs uppercase font-bold tracking-wider">Vehículos en Planta</p>
+            <h3 id="statVehicles" class="text-3xl font-bold text-white neon-text">0</h3>
+        </div>
+        <div class="p-3 bg-purple-500/20 rounded-full text-purple-400 text-2xl animate-pulse">🚗</div>
+      </div>
+    </div>
+
     <!-- TABS -->
     <div class="flex gap-2 mb-6 glass-card p-2 rounded-xl">
       <button id="tab-todos" class="flex-1 py-3 px-4 rounded-lg tab-active font-medium" onclick="setFilter('todos')">👥 Todos</button>
       <button id="tab-ETT" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('ETT')">💼 ETT</button>
-      <button id="tab-Externos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Externos')">🌐 Externos</button>
+      <button id="tab-Externos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Externos')"> Externos</button>
       <button id="tab-Llaves" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Llaves')">🔑 Llaves</button>
-      <button id="tab-Vehiculos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Vehiculos')">🚗 Vehículos</button>
+      <button id="tab-Vehiculos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Vehiculos')"> Vehículos</button>
     </div>
 
     <!-- FORM EMPLEADOS -->
@@ -96,7 +119,7 @@
         <input id="nombre" placeholder="Nombre completo" class="input-field p-3 rounded-lg md:col-span-2">
         <select id="tipo" class="input-field p-3 rounded-lg">
           <option value="ETT">💼 ETT</option>
-          <option value="Externos"> Externos</option>
+          <option value="Externos">🌐 Externos</option>
         </select>
         <input id="depto" placeholder="Departamento / Empresa" class="input-field p-3 rounded-lg">
         <input id="obs" placeholder="Observaciones" class="input-field p-3 rounded-lg">
@@ -138,7 +161,7 @@
         <button id="btnEntradaVehiculo" class="btn-primary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span>🟢</span> Entrada Vehículo</button>
         <button id="btnSalidaVehiculo" class="btn-secondary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span>🟠</span> Salida Vehículo</button>
         <button id="btnGuardarVehiculo" class="btn-db px-4 py-3 rounded-lg font-semibold text-white flex items-center gap-2 border border-purple-500/50">💾 Nuevo Vehículo</button>
-        <button id="btnImportVehiculos" class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition"> CSV Vehículos</button>
+        <button id="btnImportVehiculos" class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition">📥 CSV Vehículos</button>
       </div>
       <p id="formMsgVehiculos" class="text-sm mt-3 hidden"></p>
     </div>
@@ -179,7 +202,7 @@
 
   <div id="importLlavesModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="glass-card p-6 rounded-2xl w-full max-w-md">
-      <h3 class="text-xl font-bold gradient-text mb-4"> Importar Llaves</h3>
+      <h3 class="text-xl font-bold gradient-text mb-4">📥 Importar Llaves</h3>
       <p class="text-slate-400 text-sm mb-4">CSV: Número, Nombre</p>
       <input type="file" id="csvFileLlaves" accept=".csv,.xlsx,.xls" class="block w-full text-sm mb-4 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary/20 file:text-primary hover:file:bg-primary/30">
       <div class="flex justify-end gap-3">
@@ -230,7 +253,6 @@
     let keysMap = {}; 
     let vehiclesMap = {}; 
 
-    // Inicializar fecha
     const dateInput = document.getElementById('dateFilter');
     const todayStr = new Date().toISOString().split('T')[0];
     
@@ -244,8 +266,19 @@
       return `<span class="text-cyan-400 font-semibold">${h}h ${m}m</span>`;
     }
     
-    // NUEVO: Obtener fecha de búsqueda
     function getQueryDate() { return document.getElementById('dateFilter').value || todayStr; }
+
+    // NUEVA FUNCIÓN: CALCULAR ESTADÍSTICAS
+    function renderStats() {
+      const p = todayRecords.filter(r => !r.salida).length;
+      document.getElementById('statPeople').textContent = p;
+      
+      const k = todayKeys.filter(k => k.estado === 'activa').length;
+      document.getElementById('statKeys').textContent = k;
+      
+      const v = todayVehicles.filter(v => !v.salida).length;
+      document.getElementById('statVehicles').textContent = v;
+    }
 
     function showMessage(text, type='info') {
       let elId = 'formMsg';
@@ -282,7 +315,6 @@
 
     document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
-    // NUEVO: Lógica de cambio de fecha
     dateInput.addEventListener('change', () => {
         const val = dateInput.value;
         const todayBtn = document.getElementById('btnHoy');
@@ -310,7 +342,7 @@
       document.getElementById('formEmpleados').classList.toggle('hidden', filter==='Llaves' || filter==='Vehiculos');
       document.getElementById('formLlaves').classList.toggle('hidden', filter!=='Llaves');
       document.getElementById('formVehiculos').classList.toggle('hidden', filter!=='Vehiculos');
-      if(filter==='Llaves') document.getElementById('mainTitle').textContent = '🔑 Control de Llaves';
+      if(filter==='Llaves') document.getElementById('mainTitle').textContent = ' Control de Llaves';
       else if(filter==='Vehiculos') document.getElementById('mainTitle').textContent = '🚗 Registro de Vehículos';
       else document.getElementById('mainTitle').textContent = '📋 Registro Diario';
       updateTableHeaders();
@@ -328,7 +360,6 @@
       }
     }
 
-    // NUEVO: Carga unificada por fecha
     function loadAllData() {
       const dateToQuery = getQueryDate();
       
@@ -337,21 +368,21 @@
         onSnapshot(q, snap => {
           todayKeys = []; snap.forEach(d => todayKeys.push({id:d.id, ...d.data()}));
           todayKeys.sort((a,b) => (b.horaRetiro?.seconds||0) - (a.horaRetiro?.seconds||0));
-          loadKeysDropdown(); renderKeysTable();
+          loadKeysDropdown(); renderKeysTable(); renderStats();
         });
       } else if(currentFilter === 'Vehiculos') {
         const q = query(collection(db, 'registro_vehiculos'), where('uid','==',currentUser.uid), where('fecha','==',dateToQuery));
         onSnapshot(q, snap => {
           todayVehicles = []; snap.forEach(d => todayVehicles.push({id:d.id, ...d.data()}));
           todayVehicles.sort((a,b) => (b.entrada?.seconds||0) - (a.entrada?.seconds||0));
-          renderVehiclesTable();
+          renderVehiclesTable(); renderStats();
         });
       } else {
         const q = query(collection(db, 'registros'), where('uid','==',currentUser.uid), where('fecha','==',dateToQuery));
         onSnapshot(q, snap => {
           todayRecords = []; snap.forEach(d => todayRecords.push({id:d.id, ...d.data()}));
           todayRecords.sort((a,b) => (b.entrada?.seconds||0) - (a.entrada?.seconds||0));
-          renderEmpleadosTable();
+          renderEmpleadosTable(); renderStats();
         });
       }
     }
@@ -363,7 +394,7 @@
       tbody.innerHTML = filtered.map(r => {
         const badgeClass = r.tipo==='ETT' ? 'badge-ett' : 'badge-externos';
         const rowClass = !r.salida ? 'table-row-active' : 'hover:bg-slate-800/30';
-        const actionBtn = !r.salida ? `<button onclick="window.quickCheckout('${r.dni}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition mx-auto"> Salida</button>` : `<span class="text-slate-600 text-xs">Completado</span>`;
+        const actionBtn = !r.salida ? `<button onclick="window.quickCheckout('${r.dni}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition mx-auto">🟠 Salida</button>` : `<span class="text-slate-600 text-xs">Completado</span>`;
         return `<tr class="${rowClass} transition-all"><td class="p-4"><span class="px-2 py-1 text-xs rounded-full ${badgeClass}">${r.tipo}</span></td><td class="p-4 font-medium">${r.nombre||'-'}</td><td class="p-4 font-mono text-xs text-slate-400">${r.dni}</td><td class="p-4 text-cyan-400">${fmtDate(r.entrada)}</td><td class="p-4 text-slate-400">${fmtDate(r.salida)}</td><td class="p-4">${calcDuration(r.entrada, r.salida)}</td><td class="p-4 text-slate-400">${r.depto||'-'}</td><td class="p-4 text-slate-500 text-xs max-w-xs truncate">${r.observaciones||'-'}</td><td class="p-4">${actionBtn}</td></tr>`;
       }).join('');
     }
@@ -398,7 +429,6 @@
       }).join('');
     }
 
-    // ACTIONS EMPLEADOS
     window.quickCheckout = async (dni) => {
       const active = todayRecords.find(r=>r.dni===dni && !r.salida);
       if(!active) { showMessage('No hay entrada activa','error'); return; }
@@ -430,7 +460,6 @@
       try { await setDoc(doc(db,'empleados',dni), {dni,nombre,depto,tipo,fechaAlta:serverTimestamp()}); showMessage(`✅ ${nombre} guardado`); } catch(e){ showMessage('Error','error'); }
     });
 
-    // ACTIONS LLAVES
     async function loadKeysMaster() {
       const snap = await getDocs(collection(db,'llaves'));
       keysMap = {}; snap.forEach(d => keysMap[d.id] = d.data());
@@ -465,7 +494,6 @@
       window.returnKey(activeLog.id, keyNum);
     });
 
-    // ACTIONS VEHICULOS
     async function loadVehiclesMaster() {
       const snap = await getDocs(collection(db,'vehiculos'));
       vehiclesMap = {}; snap.forEach(d => vehiclesMap[d.id] = d.data());
@@ -521,7 +549,6 @@
       try { await setDoc(doc(db,'vehiculos',mat), {matricula:mat, empresa:emp}); showMessage(`✅ Vehículo guardado`); } catch(e){ showMessage('Error','error'); }
     });
 
-    // EXPORT
     document.getElementById('btnExport').addEventListener('click', () => {
       const dateLabel = getQueryDate().replace(/-/g, '');
       if(currentFilter === 'Llaves') {
@@ -537,7 +564,6 @@
       }
     });
 
-    // IMPORTS
     document.getElementById('btnImport').addEventListener('click', () => document.getElementById('importModal').classList.remove('hidden'));
     document.getElementById('btnProcessImport').addEventListener('click', async () => {
       const file = document.getElementById('csvFile').files[0]; if(!file) return alert('Selecciona archivo');
@@ -559,7 +585,7 @@
           }
           if(count%450!==0) await batch.commit();
           status.textContent=`✅ ${count} importados`; setTimeout(()=>document.getElementById('importModal').classList.add('hidden'),2000);
-        } catch(err) { status.textContent=' '+err.message; status.classList.add('text-red-400'); }
+        } catch(err) { status.textContent='❌ '+err.message; status.classList.add('text-red-400'); }
       }; reader.readAsBinaryString(file);
     });
 
@@ -630,7 +656,6 @@
       reader.readAsText(file, 'UTF-8');
     });
 
-    // INIT
     loadKeysMaster();
     loadVehiclesMaster();
   </script>
