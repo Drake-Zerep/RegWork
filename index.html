@@ -34,7 +34,20 @@
     .input-field { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(6, 182, 212, 0.3); color: #e2e8f0; transition: all 0.3s ease; }
     .input-field:focus { border-color: #06b6d4; box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2); outline: none; }
     .input-field::placeholder { color: #64748b; }
+    
+    /* NUEVO: Estilos para alerta de tiempo */
     .table-row-active { background: linear-gradient(90deg, rgba(6, 182, 212, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%); border-left: 3px solid #06b6d4; }
+    
+    .alert-active {
+        animation: alert-pulse 2s infinite;
+        border-left: 3px solid #ef4444 !important;
+    }
+    @keyframes alert-pulse {
+        0% { background-color: rgba(239, 68, 68, 0.1); box-shadow: inset 0 0 10px rgba(239, 68, 68, 0.1); }
+        50% { background-color: rgba(239, 68, 68, 0.25); box-shadow: inset 0 0 20px rgba(239, 68, 68, 0.2); }
+        100% { background-color: rgba(239, 68, 68, 0.1); box-shadow: inset 0 0 10px rgba(239, 68, 68, 0.1); }
+    }
+
     .badge-ett { background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.5); color: #a78bfa; }
     .badge-externos { background: rgba(6, 182, 212, 0.2); border: 1px solid rgba(6, 182, 212, 0.5); color: #22d3ee; }
     .badge-prestada { background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.5); color: #fbbf24; }
@@ -78,7 +91,7 @@
       <button id="logoutBtn" class="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 transition">Cerrar sesión</button>
     </header>
 
-    <!-- NUEVO: ESTADÍSTICAS EN TIEMPO REAL -->
+    <!-- ESTADÍSTICAS EN TIEMPO REAL -->
     <div id="statsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
       <div class="glass-card p-4 rounded-xl flex items-center justify-between hover:border-primary/50 transition-all cursor-default">
         <div>
@@ -109,7 +122,7 @@
       <button id="tab-ETT" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('ETT')">💼 ETT</button>
       <button id="tab-Externos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Externos')"> Externos</button>
       <button id="tab-Llaves" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Llaves')">🔑 Llaves</button>
-      <button id="tab-Vehiculos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Vehiculos')"> Vehículos</button>
+      <button id="tab-Vehiculos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Vehiculos')">🚗 Vehículos</button>
     </div>
 
     <!-- FORM EMPLEADOS -->
@@ -143,9 +156,9 @@
         <input id="obsLlave" placeholder="Observaciones" class="input-field p-3 rounded-lg">
       </div>
       <div class="flex gap-3 mt-4">
-        <button id="btnRetirar" class="btn-primary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span>🔓</span> Retirar Llave</button>
+        <button id="btnRetirar" class="btn-primary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span></span> Retirar Llave</button>
         <button id="btnEntregar" class="btn-secondary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span>🔒</span> Entregar Llave</button>
-        <button id="btnImportLlaves" class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition">📥 CSV Llaves</button>
+        <button id="btnImportLlaves" class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition"> CSV Llaves</button>
       </div>
       <p id="formMsgLlaves" class="text-sm mt-3 hidden"></p>
     </div>
@@ -256,9 +269,14 @@
     const dateInput = document.getElementById('dateFilter');
     const todayStr = new Date().toISOString().split('T')[0];
     
+    // Constante para la alerta de tiempo (en milisegundos)
+    // 4 horas = 4 * 60 * 60 * 1000
+    const ALERT_THRESHOLD = 4 * 60 * 60 * 1000; 
+
     document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
     function fmtDate(ts) { if (!ts) return '-'; return new Date(ts.seconds * 1000).toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'}); }
+    
     function calcDuration(start, end) {
       if (!end || !start) return '<span class="text-slate-500">-</span>';
       const ms = end.seconds * 1000 - start.seconds * 1000;
@@ -266,18 +284,16 @@
       return `<span class="text-cyan-400 font-semibold">${h}h ${m}m</span>`;
     }
     
-    function getQueryDate() { return document.getElementById('dateFilter').value || todayStr; }
-
-    // NUEVA FUNCIÓN: CALCULAR ESTADÍSTICAS
-    function renderStats() {
-      const p = todayRecords.filter(r => !r.salida).length;
-      document.getElementById('statPeople').textContent = p;
-      
-      const k = todayKeys.filter(k => k.estado === 'activa').length;
-      document.getElementById('statKeys').textContent = k;
-      
-      const v = todayVehicles.filter(v => !v.salida).length;
-      document.getElementById('statVehicles').textContent = v;
+    // NUEVA FUNCIÓN: Verificar si es "Tarjetón" (más de 4 horas)
+    function isLateAlert(timestamp, exitTimestamp) {
+        if (!timestamp || exitTimestamp) return false; // Si ya salió, no alerta
+        // Solo alertar si estamos en modo "Hoy"
+        if (!dateInput.value) {
+            const now = Date.now();
+            const entry = timestamp.seconds * 1000;
+            return (now - entry) > ALERT_THRESHOLD;
+        }
+        return false;
     }
 
     function showMessage(text, type='info') {
@@ -342,7 +358,7 @@
       document.getElementById('formEmpleados').classList.toggle('hidden', filter==='Llaves' || filter==='Vehiculos');
       document.getElementById('formLlaves').classList.toggle('hidden', filter!=='Llaves');
       document.getElementById('formVehiculos').classList.toggle('hidden', filter!=='Vehiculos');
-      if(filter==='Llaves') document.getElementById('mainTitle').textContent = ' Control de Llaves';
+      if(filter==='Llaves') document.getElementById('mainTitle').textContent = '🔑 Control de Llaves';
       else if(filter==='Vehiculos') document.getElementById('mainTitle').textContent = '🚗 Registro de Vehículos';
       else document.getElementById('mainTitle').textContent = '📋 Registro Diario';
       updateTableHeaders();
@@ -361,7 +377,7 @@
     }
 
     function loadAllData() {
-      const dateToQuery = getQueryDate();
+      const dateToQuery = dateInput.value || todayStr;
       
       if(currentFilter === 'Llaves') {
         const q = query(collection(db, 'registro_llaves'), where('uid','==',currentUser.uid), where('fecha','==',dateToQuery));
@@ -387,15 +403,25 @@
       }
     }
 
+    // NUEVO: Renderizado con lógica de alertas
     function renderEmpleadosTable() {
       const tbody = document.getElementById('tableBody');
       const filtered = currentFilter==='todos' ? todayRecords : todayRecords.filter(r=>r.tipo===currentFilter);
       if(!filtered.length) { tbody.innerHTML = '<tr><td colspan="9" class="p-8 text-center text-slate-500">Sin registros hoy</td></tr>'; return; }
+      
       tbody.innerHTML = filtered.map(r => {
         const badgeClass = r.tipo==='ETT' ? 'badge-ett' : 'badge-externos';
-        const rowClass = !r.salida ? 'table-row-active' : 'hover:bg-slate-800/30';
+        // Detectar si es tarde
+        const late = isLateAlert(r.entrada, r.salida);
+        // Usar clase alert-active si es tarde, sino table-row-active normal
+        const rowClass = late ? 'alert-active' : (!r.salida ? 'table-row-active' : 'hover:bg-slate-800/30');
+        
+        // Icono de alerta si es tarde
+        const alertIcon = late ? '<span class="text-red-500 animate-pulse mr-1" title="Más de 4h dentro">⚠️</span>' : '';
+
         const actionBtn = !r.salida ? `<button onclick="window.quickCheckout('${r.dni}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition mx-auto">🟠 Salida</button>` : `<span class="text-slate-600 text-xs">Completado</span>`;
-        return `<tr class="${rowClass} transition-all"><td class="p-4"><span class="px-2 py-1 text-xs rounded-full ${badgeClass}">${r.tipo}</span></td><td class="p-4 font-medium">${r.nombre||'-'}</td><td class="p-4 font-mono text-xs text-slate-400">${r.dni}</td><td class="p-4 text-cyan-400">${fmtDate(r.entrada)}</td><td class="p-4 text-slate-400">${fmtDate(r.salida)}</td><td class="p-4">${calcDuration(r.entrada, r.salida)}</td><td class="p-4 text-slate-400">${r.depto||'-'}</td><td class="p-4 text-slate-500 text-xs max-w-xs truncate">${r.observaciones||'-'}</td><td class="p-4">${actionBtn}</td></tr>`;
+        
+        return `<tr class="${rowClass} transition-all"><td class="p-4"><span class="px-2 py-1 text-xs rounded-full ${badgeClass}">${r.tipo}</span></td><td class="p-4 font-medium">${r.nombre||'-'}</td><td class="p-4 font-mono text-xs text-slate-400">${alertIcon}${r.dni}</td><td class="p-4 text-cyan-400">${fmtDate(r.entrada)}</td><td class="p-4 text-slate-400">${fmtDate(r.salida)}</td><td class="p-4">${calcDuration(r.entrada, r.salida)}</td><td class="p-4 text-slate-400">${r.depto||'-'}</td><td class="p-4 text-slate-500 text-xs max-w-xs truncate">${r.observaciones||'-'}</td><td class="p-4">${actionBtn}</td></tr>`;
       }).join('');
     }
 
@@ -413,9 +439,12 @@
       const tbody = document.getElementById('tableBody');
       if(!todayKeys.length) { tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-slate-500">Sin movimientos hoy</td></tr>'; return; }
       tbody.innerHTML = todayKeys.map(k => {
-        const rowClass = k.estado==='activa' ? 'table-row-active' : 'hover:bg-slate-800/30';
+        const late = isLateAlert(k.horaRetiro, k.horaEntrega);
+        const rowClass = late ? 'alert-active' : (k.estado==='activa' ? 'table-row-active' : 'hover:bg-slate-800/30');
+        const alertIcon = late ? '<span class="text-red-500 animate-pulse mr-1" title="Más de 4h fuera">⚠️</span>' : '';
+        
         const actionBtn = k.estado==='activa' ? `<button onclick="window.returnKey('${k.id}', '${k.llaveNumero}')" class="px-3 py-1 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/30 text-xs font-semibold transition mx-auto">🔒 Entregar</button>` : `<span class="text-slate-600 text-xs">Devuelta</span>`;
-        return `<tr class="${rowClass} transition-all"><td class="p-4 font-mono text-cyan-400">${k.llaveNumero}</td><td class="p-4">${k.llaveNombre||'-'}</td><td class="p-4 font-medium">${k.persona}</td><td class="p-4 text-cyan-400">${fmtDate(k.horaRetiro)}</td><td class="p-4 text-slate-400">${fmtDate(k.horaEntrega)}</td><td class="p-4">${calcDuration(k.horaRetiro, k.horaEntrega)}</td><td class="p-4"><span class="px-2 py-1 text-xs rounded-full ${k.estado==='activa'?'badge-prestada':'bg-slate-700 text-slate-400'}">${k.estado==='activa'?'Prestada':'Devuelta'}</span></td><td class="p-4">${actionBtn}</td></tr>`;
+        return `<tr class="${rowClass} transition-all"><td class="p-4 font-mono text-cyan-400">${k.llaveNumero}</td><td class="p-4">${k.llaveNombre||'-'}</td><td class="p-4 font-medium">${k.persona}</td><td class="p-4 text-cyan-400">${fmtDate(k.horaRetiro)}</td><td class="p-4 text-slate-400">${fmtDate(k.horaEntrega)}</td><td class="p-4">${calcDuration(k.horaRetiro, k.horaEntrega)}</td><td class="p-4"><span class="px-2 py-1 text-xs rounded-full ${k.estado==='activa'?'badge-prestada':'bg-slate-700 text-slate-400'}">${alertIcon}${k.estado==='activa'?'Prestada':'Devuelta'}</span></td><td class="p-4">${actionBtn}</td></tr>`;
       }).join('');
     }
 
@@ -423,10 +452,25 @@
       const tbody = document.getElementById('tableBody');
       if(!todayVehicles.length) { tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-slate-500">Sin vehículos hoy</td></tr>'; return; }
       tbody.innerHTML = todayVehicles.map(v => {
-        const rowClass = !v.salida ? 'table-row-active' : 'hover:bg-slate-800/30';
+        const late = isLateAlert(v.entrada, v.salida);
+        const rowClass = late ? 'alert-active' : (!v.salida ? 'table-row-active' : 'hover:bg-slate-800/30');
+        const alertIcon = late ? '<span class="text-red-500 animate-pulse mr-1" title="Más de 4h dentro">️</span>' : '';
+        
         const actionBtn = !v.salida ? `<button onclick="window.quickCheckoutVehicle('${v.matricula}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition mx-auto">🟠 Salida</button>` : `<span class="text-slate-600 text-xs">Fuera</span>`;
-        return `<tr class="${rowClass} transition-all"><td class="p-4 font-mono text-cyan-400 text-lg">${v.matricula}</td><td class="p-4">${v.empresa||'-'}</td><td class="p-4 text-cyan-400">${fmtDate(v.entrada)}</td><td class="p-4 text-slate-400">${fmtDate(v.salida)}</td><td class="p-4">${calcDuration(v.entrada, v.salida)}</td><td class="p-4"><span class="px-2 py-1 text-xs rounded-full ${!v.salida?'badge-prestada':'bg-slate-700 text-slate-400'}">${!v.salida?'Dentro':'Fuera'}</span></td><td class="p-4 text-slate-500 text-xs max-w-xs truncate">${v.observaciones||'-'}</td><td class="p-4">${actionBtn}</td></tr>`;
+        return `<tr class="${rowClass} transition-all"><td class="p-4 font-mono text-cyan-400 text-lg">${alertIcon}${v.matricula}</td><td class="p-4">${v.empresa||'-'}</td><td class="p-4 text-cyan-400">${fmtDate(v.entrada)}</td><td class="p-4 text-slate-400">${fmtDate(v.salida)}</td><td class="p-4">${calcDuration(v.entrada, v.salida)}</td><td class="p-4"><span class="px-2 py-1 text-xs rounded-full ${!v.salida?'badge-prestada':'bg-slate-700 text-slate-400'}">${!v.salida?'Dentro':'Fuera'}</span></td><td class="p-4 text-slate-500 text-xs max-w-xs truncate">${v.observaciones||'-'}</td><td class="p-4">${actionBtn}</td></tr>`;
       }).join('');
+    }
+
+    // Función para actualizar las estadísticas superiores
+    function renderStats() {
+      const p = todayRecords.filter(r => !r.salida).length;
+      document.getElementById('statPeople').textContent = p;
+      
+      const k = todayKeys.filter(k => k.estado === 'activa').length;
+      document.getElementById('statKeys').textContent = k;
+      
+      const v = todayVehicles.filter(v => !v.salida).length;
+      document.getElementById('statVehicles').textContent = v;
     }
 
     window.quickCheckout = async (dni) => {
@@ -443,7 +487,7 @@
 
     document.getElementById('btnEntrada').addEventListener('click', async () => {
       const dni = document.getElementById('dni').value.trim().toUpperCase(); if(!/^[0-9]{8}[A-Z]$/.test(dni)) { showMessage('DNI no válido','error'); return; }
-      try { await addDoc(collection(db,'registros'), { uid:currentUser.uid, tipo:document.getElementById('tipo').value, dni, nombre:document.getElementById('nombre').value.trim(), depto:document.getElementById('depto').value.trim(), observaciones:document.getElementById('obs').value.trim(), fecha:getQueryDate(), entrada:serverTimestamp(), estado:'activo' }); showMessage('✅ Entrada registrada'); ['dni','nombre','depto','obs'].forEach(id=>document.getElementById(id).value=''); } 
+      try { await addDoc(collection(db,'registros'), { uid:currentUser.uid, tipo:document.getElementById('tipo').value, dni, nombre:document.getElementById('nombre').value.trim(), depto:document.getElementById('depto').value.trim(), observaciones:document.getElementById('obs').value.trim(), fecha:todayStr, entrada:serverTimestamp(), estado:'activo' }); showMessage('✅ Entrada registrada'); ['dni','nombre','depto','obs'].forEach(id=>document.getElementById(id).value=''); } 
       catch(e) { showMessage('Error','error'); }
     });
 
@@ -479,7 +523,7 @@
       if(!keyNum || !persona) { showMessage('Selecciona llave y persona','error'); return; }
       if(keysMap[keyNum]?.estado !== 'disponible') { showMessage('Llave ya prestada','error'); return; }
       try {
-        await addDoc(collection(db,'registro_llaves'), { uid:currentUser.uid, fecha:getQueryDate(), llaveNumero:keyNum, llaveNombre:keysMap[keyNum].nombre, persona, observaciones:document.getElementById('obsLlave').value.trim(), horaRetiro:serverTimestamp(), estado:'activa' });
+        await addDoc(collection(db,'registro_llaves'), { uid:currentUser.uid, fecha:todayStr, llaveNumero:keyNum, llaveNombre:keysMap[keyNum].nombre, persona, observaciones:document.getElementById('obsLlave').value.trim(), horaRetiro:serverTimestamp(), estado:'activa' });
         await updateDoc(doc(db,'llaves',keyNum), {estado:'prestada'});
         keysMap[keyNum].estado = 'prestada'; loadKeysDropdown();
         showMessage('✅ Llave retirada'); document.getElementById('personaLlave').value=''; document.getElementById('obsLlave').value='';
@@ -526,7 +570,7 @@
       mat = mat.replace(/[^A-Z0-9]/g, '');
       if(mat.length < 5) { showMessage('Formato matrícula incorrecto','error'); return; }
       try {
-        await addDoc(collection(db,'registro_vehiculos'), { uid:currentUser.uid, matricula:mat, empresa:document.getElementById('empresaVehiculo').value.trim(), observaciones:document.getElementById('obsVehiculo').value.trim(), fecha:getQueryDate(), entrada:serverTimestamp(), estado:'activo' });
+        await addDoc(collection(db,'registro_vehiculos'), { uid:currentUser.uid, matricula:mat, empresa:document.getElementById('empresaVehiculo').value.trim(), observaciones:document.getElementById('obsVehiculo').value.trim(), fecha:todayStr, entrada:serverTimestamp(), estado:'activo' });
         showMessage('✅ Entrada vehículo registrada'); 
         ['matriculaInput','empresaVehiculo','obsVehiculo'].forEach(id=>document.getElementById(id).value='');
       } catch(e) { showMessage('Error','error'); }
@@ -564,6 +608,7 @@
       }
     });
 
+    // IMPORTS
     document.getElementById('btnImport').addEventListener('click', () => document.getElementById('importModal').classList.remove('hidden'));
     document.getElementById('btnProcessImport').addEventListener('click', async () => {
       const file = document.getElementById('csvFile').files[0]; if(!file) return alert('Selecciona archivo');
@@ -585,7 +630,7 @@
           }
           if(count%450!==0) await batch.commit();
           status.textContent=`✅ ${count} importados`; setTimeout(()=>document.getElementById('importModal').classList.add('hidden'),2000);
-        } catch(err) { status.textContent='❌ '+err.message; status.classList.add('text-red-400'); }
+        } catch(err) { status.textContent=' '+err.message; status.classList.add('text-red-400'); }
       }; reader.readAsBinaryString(file);
     });
 
