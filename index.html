@@ -120,19 +120,16 @@
       <p id="formMsgLlaves" class="text-sm mt-3 hidden"></p>
     </div>
 
-    <!-- FORM VEHICULOS -->
+        <!-- FORM VEHICULOS -->
     <div id="formVehiculos" class="hidden glass-card p-6 rounded-xl mb-6">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-        <select id="matriculaSelect" class="input-field p-3 rounded-lg md:col-span-1 uppercase">
-          <option value="">Seleccionar Matrícula...</option>
-        </select>
-        <input id="matriculaInput" placeholder="Matrícula (0000AAA)" class="input-field p-3 rounded-lg uppercase">
-        <input id="empresaVehiculo" placeholder="Empresa" class="input-field p-3 rounded-lg">
-        <input id="obsVehiculo" placeholder="Observaciones" class="input-field p-3 rounded-lg">
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+        <input id="matriculaInput" placeholder="Matrícula (0000AAA)" class="input-field p-3 rounded-lg md:col-span-1 uppercase">
+        <input id="empresaVehiculo" placeholder="Empresa (se autocompleta)" class="input-field p-3 rounded-lg md:col-span-2">
+        <input id="obsVehiculo" placeholder="Observaciones" class="input-field p-3 rounded-lg md:col-span-2">
       </div>
       <div class="flex gap-3 mt-4">
         <button id="btnEntradaVehiculo" class="btn-primary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span>🟢</span> Entrada Vehículo</button>
-        <button id="btnSalidaVehiculo" class="btn-secondary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span></span> Salida Vehículo</button>
+        <button id="btnSalidaVehiculo" class="btn-secondary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"><span>🟠</span> Salida Vehículo</button>
         <button id="btnGuardarVehiculo" class="btn-db px-4 py-3 rounded-lg font-semibold text-white flex items-center gap-2 border border-purple-500/50">💾 Nuevo Vehículo</button>
         <button id="btnImportVehiculos" class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition">📥 CSV Vehículos</button>
       </div>
@@ -153,7 +150,7 @@
       </div>
       <div class="p-4 border-t border-slate-700/50 flex justify-end">
         <button id="btnExport" class="px-6 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold hover:shadow-lg hover:shadow-cyan-500/30 transition flex items-center gap-2">
-          <span></span> Exportar Excel
+          <span>📊</span> Exportar Excel
         </button>
       </div>
     </div>
