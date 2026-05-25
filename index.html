@@ -1,110 +1,296 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro ETT & Externos</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#06b6d4',
+            secondary: '#8b5cf6',
+            accent: '#f59e0b',
+            dark: '#0f172a',
+            darker: '#020617',
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+          },
+          keyframes: {
+            glow: {
+              '0%': { boxShadow: '0 0 5px #06b6d4, 0 0 10px #06b6d4' },
+              '100%': { boxShadow: '0 0 20px #06b6d4, 0 0 30px #06b6d4' },
+            }
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3b82f6; border-radius: 50%; width: 18px; height: 18px; animation: spin 1s linear infinite; display: inline-block; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .tab-active { border-bottom: 2px solid #3b82f6; color: #1d4ed8; font-weight: 600; }
-    .tab-inactive { border-bottom: 2px solid transparent; color: #6b7280; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      background-attachment: fixed;
+    }
+    
+    .glass {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .glass-card {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .neon-text {
+      text-shadow: 0 0 10px rgba(6, 182, 212, 0.8), 0 0 20px rgba(6, 182, 212, 0.5);
+    }
+    
+    .neon-border {
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.5), inset 0 0 10px rgba(6, 182, 212, 0.2);
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .tab-active {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
+      border-bottom: 2px solid #06b6d4;
+      color: #06b6d4;
+    }
+    
+    .tab-inactive {
+      border-bottom: 2px solid transparent;
+      color: #64748b;
+      transition: all 0.3s ease;
+    }
+    
+    .tab-inactive:hover {
+      color: #06b6d4;
+      background: rgba(6, 182, 212, 0.1);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(6, 182, 212, 0.6);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6);
+    }
+    
+    .input-field {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      color: #e2e8f0;
+      transition: all 0.3s ease;
+    }
+    
+    .input-field:focus {
+      border-color: #06b6d4;
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+      outline: none;
+    }
+    
+    .input-field::placeholder {
+      color: #64748b;
+    }
+    
+    .table-row-active {
+      background: linear-gradient(90deg, rgba(6, 182, 212, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+      border-left: 3px solid #06b6d4;
+    }
+    
+    .badge-ett {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0.1) 100%);
+      border: 1px solid rgba(139, 92, 246, 0.5);
+      color: #a78bfa;
+    }
+    
+    .badge-externos {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.3) 0%, rgba(6, 182, 212, 0.1) 100%);
+      border: 1px solid rgba(6, 182, 212, 0.5);
+      color: #22d3ee;
+    }
+    
+    .grid-bg {
+      background-image: 
+        linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col font-sans text-gray-800">
+<body class="bg-darker min-h-screen flex flex-col text-slate-200 grid-bg">
 
   <!-- LOGIN -->
-  <div id="loginView" class="flex-1 flex items-center justify-center">
-    <form id="loginForm" class="bg-white p-8 rounded-xl shadow-lg w-full max-w-sm space-y-4">
-      <h2 class="text-xl font-bold text-center mb-2">Acceso Registro</h2>
-      <input type="email" id="email" placeholder="Email" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
-      <input type="password" id="password" placeholder="Contraseña" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
-      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">Entrar</button>
-      <p id="loginError" class="text-red-500 text-sm hidden text-center"></p>
+  <div id="loginView" class="flex-1 flex items-center justify-center p-4">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse-slow"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
+    </div>
+    <form id="loginForm" class="glass-card p-8 rounded-2xl w-full max-w-md space-y-6 relative z-10">
+      <div class="text-center">
+        <h2 class="text-3xl font-bold gradient-text neon-text mb-2">Acceso Registro</h2>
+        <p class="text-slate-400 text-sm">Sistema de Control de Personal</p>
+      </div>
+      <div class="space-y-4">
+        <input type="email" id="email" placeholder="Email" required 
+          class="input-field w-full p-3 rounded-lg">
+        <input type="password" id="password" placeholder="Contraseña" required 
+          class="input-field w-full p-3 rounded-lg">
+      </div>
+      <button type="submit" 
+        class="btn-primary w-full py-3 rounded-lg font-semibold text-white">
+        Entrar al Sistema
+      </button>
+      <p id="loginError" class="text-red-400 text-sm hidden text-center bg-red-950/30 p-2 rounded"></p>
     </form>
   </div>
 
   <!-- DASHBOARD -->
-  <div id="dashboardView" class="hidden flex-1 flex flex-col p-4 md:p-8 max-w-6xl mx-auto w-full">
-    <header class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold text-gray-900">📋 Registro Diario</h1>
-      <button id="logoutBtn" class="text-sm text-gray-500 hover:text-red-600">Cerrar sesión</button>
+  <div id="dashboardView" class="hidden flex-1 flex flex-col p-4 md:p-8 max-w-7xl mx-auto w-full relative z-10">
+    <header class="flex justify-between items-center mb-6 glass-card p-4 rounded-xl">
+      <div>
+        <h1 class="text-3xl font-bold gradient-text neon-text">📋 Registro Diario</h1>
+        <p class="text-slate-400 text-sm mt-1" id="currentDate"></p>
+      </div>
+      <button id="logoutBtn" class="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 transition">
+        Cerrar sesión
+      </button>
     </header>
 
     <!-- TABS -->
-    <div class="flex gap-4 mb-4 border-b">
-      <button id="tab-todos" class="pb-2 px-2 tab-active" onclick="setFilter('todos')">Todos</button>
-      <button id="tab-ETT" class="pb-2 px-2 tab-inactive" onclick="setFilter('ETT')">ETT</button>
-      <button id="tab-Externos" class="pb-2 px-2 tab-inactive" onclick="setFilter('Externos')">Externos</button>
+    <div class="flex gap-2 mb-6 glass-card p-2 rounded-xl">
+      <button id="tab-todos" class="flex-1 py-3 px-4 rounded-lg tab-active font-medium" onclick="setFilter('todos')">
+        👥 Todos
+      </button>
+      <button id="tab-ETT" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('ETT')">
+        💼 ETT
+      </button>
+      <button id="tab-Externos" class="flex-1 py-3 px-4 rounded-lg tab-inactive font-medium" onclick="setFilter('Externos')">
+        🌐 Externos
+      </button>
     </div>
 
     <!-- FORM -->
-    <div class="bg-white p-5 rounded-xl shadow-sm mb-6 grid grid-cols-1 md:grid-cols-6 gap-3">
-      <input id="dni" placeholder="DNI (12345678A)" class="p-2 border rounded uppercase focus:ring-2 focus:ring-blue-500 outline-none">
-      <input id="nombre" placeholder="Nombre" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none md:col-span-2">
-      <select id="tipo" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
-        <option value="ETT">ETT</option>
-        <option value="Externos">Externos</option>
-      </select>
-      <input id="depto" placeholder="Departamento" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
-      <input id="obs" placeholder="Observaciones" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
-      <div class="md:col-span-6 flex gap-2 mt-1">
-        <button id="btnEntrada" class="flex-1 bg-green-600 text-white py-2 rounded hover:bg-green-700 transition font-medium">🟢 Entrada</button>
-        <button id="btnSalida" class="flex-1 bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition font-medium">🟠 Salida</button>
-        <button id="btnImport" class="px-4 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition">📥 Importar CSV</button>
+    <div class="glass-card p-6 rounded-xl mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-6 gap-3">
+        <input id="dni" placeholder="DNI (12345678A)" 
+          class="input-field p-3 rounded-lg md:col-span-1 uppercase">
+        <input id="nombre" placeholder="Nombre completo" 
+          class="input-field p-3 rounded-lg md:col-span-2">
+        <select id="tipo" 
+          class="input-field p-3 rounded-lg">
+          <option value="ETT">💼 ETT</option>
+          <option value="Externos">🌐 Externos</option>
+        </select>
+        <input id="depto" placeholder="Departamento" 
+          class="input-field p-3 rounded-lg">
+        <input id="obs" placeholder="Observaciones" 
+          class="input-field p-3 rounded-lg">
       </div>
-      <p id="formMsg" class="text-sm mt-1 md:col-span-6 hidden"></p>
+      <div class="flex gap-3 mt-4">
+        <button id="btnEntrada" 
+          class="btn-primary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2">
+          <span class="text-xl">🟢</span> Registrar Entrada
+        </button>
+        <button id="btnSalida" 
+          class="btn-secondary flex-1 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2">
+          <span class="text-xl">🟠</span> Registrar Salida
+        </button>
+        <button id="btnImport" 
+          class="px-6 py-3 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-700 border border-slate-600 transition">
+          📥 CSV
+        </button>
+      </div>
+      <p id="formMsg" class="text-sm mt-3 hidden"></p>
     </div>
 
     <!-- TABLE -->
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden flex-1">
+    <div class="glass-card rounded-xl overflow-hidden flex-1">
       <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left">
-          <thead class="bg-gray-100 text-gray-600 uppercase">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-800/80 text-slate-300 uppercase text-xs">
             <tr>
-              <th class="p-3">Tipo</th>
-              <th class="p-3">Nombre</th>
-              <th class="p-3">DNI</th>
-              <th class="p-3">Entrada</th>
-              <th class="p-3">Salida</th>
-              <th class="p-3">Total</th>
-              <th class="p-3">Depto.</th>
-              <th class="p-3">Obs.</th>
+              <th class="p-4 text-left">Tipo</th>
+              <th class="p-4 text-left">Nombre</th>
+              <th class="p-4 text-left">DNI</th>
+              <th class="p-4 text-left">Entrada</th>
+              <th class="p-4 text-left">Salida</th>
+              <th class="p-4 text-left">Total</th>
+              <th class="p-4 text-left">Depto.</th>
+              <th class="p-4 text-left">Obs.</th>
+              <th class="p-4 text-center">Acción</th>
             </tr>
           </thead>
-          <tbody id="tableBody" class="divide-y divide-gray-200">
-            <tr><td colspan="8" class="p-4 text-center text-gray-400">Cargando...</td></tr>
+          <tbody id="tableBody" class="divide-y divide-slate-700/50">
+            <tr><td colspan="9" class="p-8 text-center text-slate-500">Cargando registros...</td></tr>
           </tbody>
         </table>
       </div>
-      <div class="p-4 border-t flex justify-end">
-        <button id="btnExport" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">📥 Exportar Excel</button>
+      <div class="p-4 border-t border-slate-700/50 flex justify-end">
+        <button id="btnExport" 
+          class="px-6 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold hover:shadow-lg hover:shadow-cyan-500/30 transition flex items-center gap-2">
+          <span>📊</span> Exportar Excel
+        </button>
       </div>
     </div>
   </div>
 
   <!-- IMPORT MODAL -->
-  <div id="importModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
-    <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
-      <h3 class="text-lg font-bold mb-3">📥 Importar Listado</h3>
-      <p class="text-sm text-gray-600 mb-4">CSV con columnas: DNI, Nombre, Tipo, Departamento</p>
-      <input type="file" id="csvFile" accept=".csv,.xlsx,.xls" class="block w-full text-sm mb-4">
-      <div class="flex justify-end gap-2">
-        <button onclick="document.getElementById('importModal').classList.add('hidden')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancelar</button>
-        <button id="btnProcessImport" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Procesar</button>
+  <div id="importModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="glass-card p-6 rounded-2xl w-full max-w-md">
+      <h3 class="text-xl font-bold gradient-text mb-4">📥 Importar Empleados</h3>
+      <p class="text-slate-400 text-sm mb-4">Formato CSV: DNI, Nombre, Departamento</p>
+      <input type="file" id="csvFile" accept=".csv,.xlsx,.xls" 
+        class="block w-full text-sm mb-4 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary/20 file:text-primary hover:file:bg-primary/30">
+      <div class="flex justify-end gap-3">
+        <button onclick="document.getElementById('importModal').classList.add('hidden')" 
+          class="px-4 py-2 text-slate-400 hover:text-white transition">Cancelar</button>
+        <button id="btnProcessImport" 
+          class="px-6 py-2 btn-primary rounded-lg font-semibold">Procesar</button>
       </div>
-      <p id="importStatus" class="text-sm mt-2 text-center hidden"></p>
+      <p id="importStatus" class="text-sm mt-3 text-center hidden"></p>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, addDoc, updateDoc, doc, query, where, onSnapshot, serverTimestamp, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, updateDoc, doc, query, where, onSnapshot, serverTimestamp, getDocs, writeBatch, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // ⚠️ REEMPLAZA ESTO CON TU CONFIG DE FIREBASE
+    // ⚠️ REEMPLAZA CON TU CONFIG DE FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyAVT8XCk0Ji-sgENTImSsmGE1UO2i7vBkA",
       authDomain: "regwork-19628.firebaseapp.com",
@@ -114,45 +300,45 @@
       appId: "1:431109000889:web:d1072b49b0b1d795255568"
     };
 
-    // Inicializar Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     
-    // Variables globales
     let currentUser = null;
     let todayRecords = [];
     let currentFilter = 'todos';
 
-    // Funciones helper
+    // Fecha actual
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-ES', { 
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+    });
+
     function fmtDate(ts) {
       if (!ts) return '-';
       return new Date(ts.seconds * 1000).toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
     }
 
     function calcDuration(start, end) {
-      if (!end || !start) return '-';
+      if (!end || !start) return '<span class="text-slate-500">-</span>';
       const ms = end.seconds * 1000 - start.seconds * 1000;
       const h = Math.floor(ms / 3600000);
       const m = Math.floor((ms % 3600000) / 60000);
-      return h + 'h ' + m + 'm';
+      return `<span class="text-cyan-400 font-semibold">${h}h ${m}m</span>`;
     }
 
     function getTodayStr() {
       return new Date().toISOString().split('T')[0];
     }
 
-    function showMessage(text, type) {
+    function showMessage(text, type = 'info') {
       const el = document.getElementById('formMsg');
       el.textContent = text;
-      el.className = 'text-sm mt-1 md:col-span-6 ' + (type === 'error' ? 'text-red-500' : 'text-green-600');
+      el.className = `text-sm mt-3 p-3 rounded-lg ${type === 'error' ? 'bg-red-950/50 text-red-400 border border-red-500/30' : 'bg-green-950/50 text-green-400 border border-green-500/30'}`;
       el.classList.remove('hidden');
       setTimeout(() => el.classList.add('hidden'), 3000);
     }
 
-    // Auth state observer
     onAuthStateChanged(auth, (user) => {
-      console.log('Auth state:', user ? 'Logged in' : 'Logged out');
       if (user) {
         currentUser = user;
         document.getElementById('loginView').classList.add('hidden');
@@ -165,7 +351,6 @@
       }
     });
 
-    // Login form
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value;
@@ -176,23 +361,17 @@
         await signInWithEmailAndPassword(auth, email, pass);
         errorEl.classList.add('hidden');
       } catch (error) {
-        console.error('Login error:', error.code, error.message);
         let msg = 'Error al entrar';
         if (error.code === 'auth/user-not-found') msg = 'Usuario no registrado';
         else if (error.code === 'auth/wrong-password') msg = 'Contraseña incorrecta';
         else if (error.code === 'auth/invalid-credential') msg = 'Credenciales inválidas';
-        else if (error.code === 'auth/network-request-failed') msg = 'Sin conexión';
         errorEl.textContent = msg;
         errorEl.classList.remove('hidden');
       }
     });
 
-    // Logout
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      signOut(auth);
-    });
+    document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
-    // Cargar registros de hoy
     function loadToday() {
       const q = query(
         collection(db, 'registros'), 
@@ -207,12 +386,9 @@
         });
         todayRecords.sort((a, b) => (b.entrada?.seconds || 0) - (a.entrada?.seconds || 0));
         renderTable();
-      }, (error) => {
-        console.error('Error loading records:', error);
       });
     }
 
-    // Renderizar tabla
     function renderTable() {
       const tbody = document.getElementById('tableBody');
       const filtered = currentFilter === 'todos' 
@@ -220,31 +396,35 @@
         : todayRecords.filter(r => r.tipo === currentFilter);
       
       if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="p-4 text-center text-gray-400">Sin registros hoy</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="p-8 text-center text-slate-500">Sin registros hoy</td></tr>';
         return;
       }
       
       tbody.innerHTML = filtered.map(r => {
-        const tipoClass = r.tipo === 'ETT' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800';
-        const rowClass = !r.salida ? 'bg-green-50' : '';
+        const badgeClass = r.tipo === 'ETT' ? 'badge-ett' : 'badge-externos';
+        const rowClass = !r.salida ? 'table-row-active' : 'hover:bg-slate-800/30';
+        const actionBtn = !r.salida 
+          ? `<button onclick="window.quickCheckout('${r.dni}')" class="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30 text-xs font-semibold transition flex items-center gap-1 mx-auto">
+               <span>🟠</span> Salida
+             </button>`
+          : `<span class="text-slate-600 text-xs">Completado</span>`;
         
-        return `<tr class="hover:bg-gray-50 ${rowClass}">
-          <td class="p-3"><span class="px-2 py-1 text-xs rounded-full ${tipoClass}">${r.tipo}</span></td>
-          <td class="p-3 font-medium">${r.nombre || '-'}</td>
-          <td class="p-3 font-mono text-xs">${r.dni}</td>
-          <td class="p-3">${fmtDate(r.entrada)}</td>
-          <td class="p-3">${fmtDate(r.salida)}</td>
-          <td class="p-3 font-semibold text-blue-700">${calcDuration(r.entrada, r.salida)}</td>
-          <td class="p-3">${r.depto || '-'}</td>
-          <td class="p-3 max-w-xs truncate">${r.observaciones || '-'}</td>
+        return `<tr class="${rowClass} transition-all">
+          <td class="p-4"><span class="px-2 py-1 text-xs rounded-full ${badgeClass}">${r.tipo}</span></td>
+          <td class="p-4 font-medium text-slate-200">${r.nombre || '-'}</td>
+          <td class="p-4 font-mono text-xs text-slate-400">${r.dni}</td>
+          <td class="p-4 text-cyan-400">${fmtDate(r.entrada)}</td>
+          <td class="p-4 text-slate-400">${fmtDate(r.salida)}</td>
+          <td class="p-4">${calcDuration(r.entrada, r.salida)}</td>
+          <td class="p-4 text-slate-400">${r.depto || '-'}</td>
+          <td class="p-4 text-slate-500 text-xs max-w-xs truncate">${r.observaciones || '-'}</td>
+          <td class="p-4">${actionBtn}</td>
         </tr>`;
       }).join('');
     }
 
-    // Función global para filtros
     window.setFilter = function(filter) {
       currentFilter = filter;
-      // Actualizar tabs
       ['todos', 'ETT', 'Externos'].forEach(f => {
         const btn = document.getElementById('tab-' + f);
         if (f === filter) {
@@ -258,31 +438,48 @@
       renderTable();
     };
 
-    // Autocompletar desde empleados
+    window.quickCheckout = async function(dni) {
+      const active = todayRecords.find(r => r.dni === dni && !r.salida);
+      if (!active) {
+        showMessage('No hay entrada activa', 'error');
+        return;
+      }
+      
+      try {
+        await updateDoc(doc(db, 'registros', active.id), {
+          salida: serverTimestamp(),
+          estado: 'finalizado'
+        });
+        showMessage('✅ Salida registrada correctamente');
+      } catch (error) {
+        showMessage('Error al registrar salida', 'error');
+      }
+    };
+
     document.getElementById('dni').addEventListener('blur', async (e) => {
       const dni = e.target.value.trim().toUpperCase();
       if (!/^[0-9]{8}[A-Z]$/.test(dni)) return;
       
       try {
-        const q = query(collection(db, 'empleados'), where('dni', '==', dni));
-        const snap = await getDocs(q);
-        if (!snap.empty) {
-          const emp = snap.docs[0].data();
+        const docRef = doc(db, 'empleados', dni);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          const emp = docSnap.data();
           document.getElementById('nombre').value = emp.nombre || '';
           document.getElementById('tipo').value = emp.tipo || 'ETT';
           document.getElementById('depto').value = emp.depto || '';
-          showMessage('Datos auto-completados');
+          showMessage('✅ Datos auto-completados');
         }
       } catch (err) {
-        console.warn('No se pudo autocompletar:', err);
+        console.error('Error:', err);
       }
     });
 
-    // Botón Entrada
     document.getElementById('btnEntrada').addEventListener('click', async () => {
       const dni = document.getElementById('dni').value.trim().toUpperCase();
       if (!/^[0-9]{8}[A-Z]$/.test(dni)) {
-        showMessage('DNI no válido (ej: 12345678A)', 'error');
+        showMessage('DNI no válido', 'error');
         return;
       }
       
@@ -301,12 +498,10 @@
         showMessage('✅ Entrada registrada');
         ['dni', 'nombre', 'depto', 'obs'].forEach(id => document.getElementById(id).value = '');
       } catch (error) {
-        console.error(error);
         showMessage('Error al guardar', 'error');
       }
     });
 
-    // Botón Salida
     document.getElementById('btnSalida').addEventListener('click', async () => {
       const dni = document.getElementById('dni').value.trim().toUpperCase();
       const active = todayRecords.find(r => r.dni === dni && !r.salida);
@@ -324,12 +519,10 @@
         showMessage('✅ Salida registrada');
         document.getElementById('dni').value = '';
       } catch (error) {
-        console.error(error);
         showMessage('Error al actualizar', 'error');
       }
     });
 
-    // Exportar Excel
     document.getElementById('btnExport').addEventListener('click', () => {
       const filtered = currentFilter === 'todos' 
         ? todayRecords 
@@ -342,18 +535,17 @@
         "Fecha de Registro": r.fecha,
         "Hora de Entrada": fmtDate(r.entrada),
         "Hora de Salida": fmtDate(r.salida),
-        "Total de horas trabajadas": calcDuration(r.entrada, r.salida),
+        "Total de horas trabajadas": r.salida ? calcDuration(r.entrada, r.salida).replace(/<[^>]*>/g, '') : '-',
         "Observaciones": r.observaciones || '',
         "Departamento": r.depto || ''
       }));
       
       const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Registro_' + getTodayStr());
-      XLSX.writeFile(wb, 'Registro_' + currentFilter + '_' + getTodayStr() + '.xlsx');
+      XLSX.utils.book_append_sheet(wb, ws, 'Registro');
+      XLSX.writeFile(wb, `Registro_${currentFilter}_${getTodayStr()}.xlsx`);
     });
 
-        // Importar CSV - VERSIÓN MEJORADA
     document.getElementById('btnImport').addEventListener('click', () => {
       document.getElementById('importModal').classList.remove('hidden');
     });
@@ -374,33 +566,24 @@
         try {
           const wb = XLSX.read(e.target.result, {type: 'binary'});
           const ws = wb.Sheets[wb.SheetNames[0]];
-          const data = XLSX.utils.sheet_to_json(ws, {header: 1}); // Leer como array
+          const data = XLSX.utils.sheet_to_json(ws, {header: 1});
           
           if (!data || data.length < 2) {
-            throw new Error('Archivo vacío o sin datos');
+            throw new Error('Archivo vacío');
           }
           
-          // Detectar encabezados (primera fila)
           const headers = data[0].map(h => h.toString().toLowerCase().trim());
-          console.log('Encabezados detectados:', headers);
+          const idxDNI = headers.findIndex(h => h.includes('dni'));
+          const idxNombre = headers.findIndex(h => h.includes('nombre'));
+          const idxDepto = headers.findIndex(h => h.includes('departamento') || h.includes('depto'));
           
-          // Buscar índices de columnas
-          const idxDNI = headers.findIndex(h => h.includes('dni') || h === 'dni');
-          const idxNombre = headers.findIndex(h => h.includes('nombre') || h.includes('name'));
-          const idxDepto = headers.findIndex(h => h.includes('departamento') || h.includes('depto') || h.includes('dept'));
-          const idxTipo = headers.findIndex(h => h.includes('tipo') || h.includes('type'));
+          if (idxDNI === -1) throw new Error('No se encontró columna DNI');
           
-          if (idxDNI === -1) {
-            throw new Error('No se encontró columna DNI. Encabezados: ' + headers.join(', '));
-          }
-          
-          status.textContent = 'Procesando ' + (data.length - 1) + ' registros...';
+          status.textContent = `Procesando ${data.length - 1} registros...`;
           
           let batch = writeBatch(db);
           let count = 0;
-          let successCount = 0;
           
-          // Procesar filas (empezar desde 1 para saltar encabezados)
           for (let i = 1; i < data.length; i++) {
             const row = data[i];
             if (!row || row.length === 0) continue;
@@ -410,52 +593,28 @@
             
             const nombre = idxNombre !== -1 && row[idxNombre] ? row[idxNombre].toString().trim() : '';
             const depto = idxDepto !== -1 && row[idxDepto] ? row[idxDepto].toString().trim() : '';
-            const tipo = idxTipo !== -1 && row[idxTipo] ? row[idxTipo].toString().trim() : 'ETT';
             
             const ref = doc(db, 'empleados', dni);
-            batch.set(ref, {
-              dni: dni,
-              nombre: nombre,
-              tipo: tipo,
-              depto: depto,
-              updatedAt: serverTimestamp()
-            });
-            
+            batch.set(ref, { dni, nombre, tipo: 'ETT', depto });
             count++;
-            successCount++;
             
-            // Commit cada 450 registros (límite de Firestore)
             if (count % 450 === 0) {
               await batch.commit();
               batch = writeBatch(db);
-              status.textContent = 'Importados ' + successCount + ' de ' + (data.length - 1);
             }
           }
           
-          // Commit final si quedan registros
-          if (count % 450 !== 0) {
-            await batch.commit();
-          }
+          if (count % 450 !== 0) await batch.commit();
           
-          status.textContent = '✅ ' + successCount + ' empleados importados correctamente';
-          status.classList.remove('text-red-600');
-          status.classList.add('text-green-600');
-          
+          status.textContent = `✅ ${count} empleados importados`;
           setTimeout(() => {
             document.getElementById('importModal').classList.add('hidden');
             document.getElementById('csvFile').value = '';
           }, 2000);
-          
         } catch (err) {
-          console.error('Error importando:', err);
           status.textContent = '❌ Error: ' + err.message;
-          status.classList.remove('text-green-600');
-          status.classList.add('text-red-600');
+          status.classList.add('text-red-400');
         }
-      };
-      reader.onerror = () => {
-        status.textContent = '❌ Error al leer el archivo';
-        status.classList.add('text-red-600');
       };
       reader.readAsBinaryString(file);
     });
