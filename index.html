@@ -353,7 +353,7 @@
       XLSX.writeFile(wb, 'Registro_' + currentFilter + '_' + getTodayStr() + '.xlsx');
     });
 
-    // Importar CSV
+        // Importar CSV - VERSIÓN MEJORADA
     document.getElementById('btnImport').addEventListener('click', () => {
       document.getElementById('importModal').classList.remove('hidden');
     });
@@ -374,45 +374,88 @@
         try {
           const wb = XLSX.read(e.target.result, {type: 'binary'});
           const ws = wb.Sheets[wb.SheetNames[0]];
-          const data = XLSX.utils.sheet_to_json(ws);
+          const data = XLSX.utils.sheet_to_json(ws, {header: 1}); // Leer como array
           
-          if (!data.length || !data[0].DNI) {
-            throw new Error('Formato incorrecto. Necesita columna DNI');
+          if (!data || data.length < 2) {
+            throw new Error('Archivo vacío o sin datos');
           }
           
-          status.textContent = 'Procesando ' + data.length + ' registros...';
+          // Detectar encabezados (primera fila)
+          const headers = data[0].map(h => h.toString().toLowerCase().trim());
+          console.log('Encabezados detectados:', headers);
+          
+          // Buscar índices de columnas
+          const idxDNI = headers.findIndex(h => h.includes('dni') || h === 'dni');
+          const idxNombre = headers.findIndex(h => h.includes('nombre') || h.includes('name'));
+          const idxDepto = headers.findIndex(h => h.includes('departamento') || h.includes('depto') || h.includes('dept'));
+          const idxTipo = headers.findIndex(h => h.includes('tipo') || h.includes('type'));
+          
+          if (idxDNI === -1) {
+            throw new Error('No se encontró columna DNI. Encabezados: ' + headers.join(', '));
+          }
+          
+          status.textContent = 'Procesando ' + (data.length - 1) + ' registros...';
+          
           let batch = writeBatch(db);
           let count = 0;
+          let successCount = 0;
           
-          data.forEach((row, index) => {
-            const ref = doc(db, 'empleados', row.DNI.toString().replace(/\s/g, ''));
-            batch.set(ref, {
-              dni: row.DNI,
-              nombre: row.Nombre || '',
-              tipo: row.Tipo || 'ETT',
-              depto: row.Departamento || ''
-            });
-            count++;
+          // Procesar filas (empezar desde 1 para saltar encabezados)
+          for (let i = 1; i < data.length; i++) {
+            const row = data[i];
+            if (!row || row.length === 0) continue;
             
+            const dni = row[idxDNI] ? row[idxDNI].toString().trim().toUpperCase() : '';
+            if (!dni) continue;
+            
+            const nombre = idxNombre !== -1 && row[idxNombre] ? row[idxNombre].toString().trim() : '';
+            const depto = idxDepto !== -1 && row[idxDepto] ? row[idxDepto].toString().trim() : '';
+            const tipo = idxTipo !== -1 && row[idxTipo] ? row[idxTipo].toString().trim() : 'ETT';
+            
+            const ref = doc(db, 'empleados', dni);
+            batch.set(ref, {
+              dni: dni,
+              nombre: nombre,
+              tipo: tipo,
+              depto: depto,
+              updatedAt: serverTimestamp()
+            });
+            
+            count++;
+            successCount++;
+            
+            // Commit cada 450 registros (límite de Firestore)
             if (count % 450 === 0) {
-              batch.commit();
+              await batch.commit();
               batch = writeBatch(db);
+              status.textContent = 'Importados ' + successCount + ' de ' + (data.length - 1);
             }
-          });
+          }
           
+          // Commit final si quedan registros
           if (count % 450 !== 0) {
             await batch.commit();
           }
           
-          status.textContent = '✅ ' + count + ' empleados importados';
+          status.textContent = '✅ ' + successCount + ' empleados importados correctamente';
+          status.classList.remove('text-red-600');
+          status.classList.add('text-green-600');
+          
           setTimeout(() => {
             document.getElementById('importModal').classList.add('hidden');
+            document.getElementById('csvFile').value = '';
           }, 2000);
+          
         } catch (err) {
-          console.error(err);
+          console.error('Error importando:', err);
           status.textContent = '❌ Error: ' + err.message;
+          status.classList.remove('text-green-600');
           status.classList.add('text-red-600');
         }
+      };
+      reader.onerror = () => {
+        status.textContent = '❌ Error al leer el archivo';
+        status.classList.add('text-red-600');
       };
       reader.readAsBinaryString(file);
     });
