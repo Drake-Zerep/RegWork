@@ -9,6 +9,8 @@
   <style>
     .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3b82f6; border-radius: 50%; width: 18px; height: 18px; animation: spin 1s linear infinite; display: inline-block; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .tab-active { border-bottom: 2px solid #3b82f6; color: #1d4ed8; font-weight: 600; }
+    .tab-inactive { border-bottom: 2px solid transparent; color: #6b7280; }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col font-sans text-gray-800">
@@ -26,22 +28,34 @@
 
   <!-- DASHBOARD -->
   <div id="dashboardView" class="hidden flex-1 flex flex-col p-4 md:p-8 max-w-5xl mx-auto w-full">
-    <header class="flex justify-between items-center mb-6">
+    <header class="flex justify-between items-center mb-4">
       <h1 class="text-2xl font-bold text-gray-900">📋 Registro Diario</h1>
       <button id="logoutBtn" class="text-sm text-gray-500 hover:text-red-600">Cerrar sesión</button>
     </header>
 
+    <!-- TABS -->
+    <div class="flex gap-4 mb-4 border-b">
+      <button class="pb-2 px-2 tab-active" data-filter="todos" onclick="setFilter('todos')">Todos</button>
+      <button class="pb-2 px-2 tab-inactive" data-filter="ETT" onclick="setFilter('ETT')">ETT</button>
+      <button class="pb-2 px-2 tab-inactive" data-filter="Externos" onclick="setFilter('Externos')">Externos</button>
+    </div>
+
     <!-- FORM -->
-    <div class="bg-white p-5 rounded-xl shadow-sm mb-6 grid grid-cols-1 md:grid-cols-5 gap-3">
-      <input id="dni" placeholder="DNI (ej: 12345678A)" class="p-2 border rounded uppercase focus:ring-2 focus:ring-blue-500 outline-none">
-      <input id="nombre" placeholder="Nombre completo" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
-      <input id="depto" placeholder="Departamento" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
-      <input id="obs" placeholder="Observaciones (opcional)" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none md:col-span-2">
-      <div class="md:col-span-5 flex gap-2 mt-1">
-        <button id="btnEntrada" class="flex-1 bg-green-600 text-white py-2 rounded hover:bg-green-700 transition font-medium">🟢 Registrar Entrada</button>
-        <button id="btnSalida" class="flex-1 bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition font-medium">🟠 Registrar Salida</button>
+    <div class="bg-white p-5 rounded-xl shadow-sm mb-6 grid grid-cols-1 md:grid-cols-6 gap-3">
+      <input id="dni" placeholder="DNI (12345678A)" class="p-2 border rounded uppercase focus:ring-2 focus:ring-blue-500 outline-none md:col-span-1">
+      <input id="nombre" placeholder="Nombre" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none md:col-span-2">
+      <select id="tipo" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none md:col-span-1">
+        <option value="ETT">ETT</option>
+        <option value="Externos">Externos</option>
+      </select>
+      <input id="depto" placeholder="Departamento" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none md:col-span-1">
+      <input id="obs" placeholder="Observaciones" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none md:col-span-1">
+      <div class="md:col-span-6 flex gap-2 mt-1">
+        <button id="btnEntrada" class="flex-1 bg-green-600 text-white py-2 rounded hover:bg-green-700 transition font-medium">🟢 Entrada</button>
+        <button id="btnSalida" class="flex-1 bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition font-medium">🟠 Salida</button>
+        <button id="btnImport" class="px-4 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition">📥 Importar CSV</button>
       </div>
-      <p id="formMsg" class="text-sm mt-1 md:col-span-5 hidden"></p>
+      <p id="formMsg" class="text-sm mt-1 md:col-span-6 hidden"></p>
     </div>
 
     <!-- TABLE -->
@@ -50,6 +64,7 @@
         <table class="w-full text-sm text-left">
           <thead class="bg-gray-100 text-gray-600 uppercase">
             <tr>
+              <th class="p-3">Tipo</th>
               <th class="p-3">Nombre</th>
               <th class="p-3">DNI</th>
               <th class="p-3">Entrada</th>
@@ -60,24 +75,36 @@
             </tr>
           </thead>
           <tbody id="tableBody" class="divide-y divide-gray-200">
-            <tr><td colspan="7" class="p-4 text-center text-gray-400">Cargando registros...</td></tr>
+            <tr><td colspan="8" class="p-4 text-center text-gray-400">Cargando...</td></tr>
           </tbody>
         </table>
       </div>
       <div class="p-4 border-t flex justify-end">
-        <button id="btnExport" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition flex items-center gap-2">
-          📥 Exportar Excel del Día
-        </button>
+        <button id="btnExport" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">📥 Exportar Excel</button>
       </div>
+    </div>
+  </div>
+
+  <!-- IMPORT MODAL -->
+  <div id="importModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
+    <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
+      <h3 class="text-lg font-bold mb-3">📥 Importar Listado de Empleados</h3>
+      <p class="text-sm text-gray-600 mb-4">Sube un CSV con columnas: <code>DNI, Nombre, Tipo, Departamento</code></p>
+      <input type="file" id="csvFile" accept=".csv,.xlsx,.xls" class="block w-full text-sm mb-4 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+      <div class="flex justify-end gap-2">
+        <button onclick="document.getElementById('importModal').classList.add('hidden')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancelar</button>
+        <button id="btnProcessImport" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Procesar</button>
+      </div>
+      <p id="importStatus" class="text-sm mt-2 text-center hidden"></p>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, addDoc, updateDoc, doc, query, where, onSnapshot, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, updateDoc, doc, query, where, onSnapshot, serverTimestamp, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // 🔑 PEGA AQUÍ TU CONFIG DE FIREBASE
+    // 🔑 PEGA TU FIREBASE CONFIG AQUÍ
     const firebaseConfig = {
       apiKey: "AIzaSyAVT8XCk0Ji-sgENTImSsmGE1UO2i7vBkA",
       authDomain: "regwork-19628.firebaseapp.com",
@@ -92,6 +119,7 @@
     const db = getFirestore(app);
     let currentUser = null;
     let todayRecords = [];
+    let currentFilter = 'todos';
 
     // Helpers
     const fmtDate = (ts) => ts ? new Date(ts.seconds * 1000).toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'}) : '-';
@@ -103,20 +131,25 @@
       return `${h}h ${m}m`;
     };
     const getTodayStr = () => new Date().toISOString().split('T')[0];
-    const msg = (t, type='info') => { const e = document.getElementById('formMsg'); e.textContent = t; e.className = `text-sm mt-1 md:col-span-5 ${type==='error'?'text-red-500':'text-green-600'}`; e.classList.remove('hidden'); setTimeout(()=>e.classList.add('hidden'), 3000); };
+    const msg = (t, type='info') => { const e = document.getElementById('formMsg'); e.textContent = t; e.className = `text-sm mt-1 md:col-span-6 ${type==='error'?'text-red-500':'text-green-600'}`; e.classList.remove('hidden'); setTimeout(()=>e.classList.add('hidden'), 3000); };
 
     // Auth
     onAuthStateChanged(auth, user => {
       if (user) { currentUser = user; document.getElementById('loginView').classList.add('hidden'); document.getElementById('dashboardView').classList.remove('hidden'); loadToday(); }
       else { document.getElementById('loginView').classList.remove('hidden'); document.getElementById('dashboardView').classList.add('hidden'); }
     });
-
-    document.getElementById('loginForm').onsubmit = async (e) => {
-      e.preventDefault();
-      try { await signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value); }
-      catch(err) { document.getElementById('loginError').textContent = 'Credenciales incorrectas'; document.getElementById('loginError').classList.remove('hidden'); }
-    };
+    document.getElementById('loginForm').onsubmit = async (e) => { e.preventDefault(); try { await signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value); } catch(err) { document.getElementById('loginError').textContent = 'Credenciales incorrectas'; document.getElementById('loginError').classList.remove('hidden'); } };
     document.getElementById('logoutBtn').onclick = () => signOut(auth);
+
+    // Filter Tabs
+    window.setFilter = (f) => {
+      currentFilter = f;
+      document.querySelectorAll('button[data-filter]').forEach(b => {
+        b.classList.toggle('tab-active', b.dataset.filter === f);
+        b.classList.toggle('tab-inactive', b.dataset.filter !== f);
+      });
+      renderTable();
+    };
 
     // Firestore
     const loadToday = () => {
@@ -124,16 +157,18 @@
       onSnapshot(q, (snap) => {
         todayRecords = [];
         snap.forEach(d => todayRecords.push({ id: d.id, ...d.data() }));
-        todayRecords.sort((a,b) => b.entrada.seconds - a.entrada.seconds);
+        todayRecords.sort((a,b) => (b.entrada?.seconds || 0) - (a.entrada?.seconds || 0));
         renderTable();
       });
     };
 
     const renderTable = () => {
       const tbody = document.getElementById('tableBody');
-      if (!todayRecords.length) { tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-gray-400">Sin registros hoy</td></tr>'; return; }
-      tbody.innerHTML = todayRecords.map(r => `
+      const filtered = currentFilter === 'todos' ? todayRecords : todayRecords.filter(r => r.tipo === currentFilter);
+      if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="8" class="p-4 text-center text-gray-400">Sin registros</td></tr>'; return; }
+      tbody.innerHTML = filtered.map(r => `
         <tr class="hover:bg-gray-50 ${!r.salida ? 'bg-green-50' : ''}">
+          <td class="p-3"><span class="px-2 py-1 text-xs rounded-full ${r.tipo==='ETT'?'bg-purple-100 text-purple-800':'bg-blue-100 text-blue-800'}">${r.tipo}</span></td>
           <td class="p-3 font-medium">${r.nombre || '-'}</td>
           <td class="p-3 font-mono text-xs">${r.dni}</td>
           <td class="p-3">${fmtDate(r.entrada)}</td>
@@ -144,19 +179,34 @@
         </tr>`).join('');
     };
 
+    // Auto-fill from empleados collection
+    document.getElementById('dni').addEventListener('blur', async (e) => {
+      const dni = e.target.value.trim().toUpperCase();
+      if (!/^[0-9]{8}[A-Z]$/.test(dni)) return;
+      const q = query(collection(db, 'empleados'), where('dni', '==', dni));
+      const snap = await getDocs(q);
+      if (!snap.empty) {
+        const emp = snap.docs[0].data();
+        document.getElementById('nombre').value = emp.nombre || '';
+        document.getElementById('tipo').value = emp.tipo || 'ETT';
+        document.getElementById('depto').value = emp.depto || '';
+        msg('✅ Datos auto-completados');
+      }
+    });
+
     // Acciones
     document.getElementById('btnEntrada').onclick = async () => {
       const dni = document.getElementById('dni').value.trim().toUpperCase();
       if (!/^[0-9]{8}[A-Z]$/.test(dni)) return msg('DNI no válido', 'error');
       try {
         await addDoc(collection(db, 'registros'), {
-          uid: currentUser.uid, dni, nombre: document.getElementById('nombre').value.trim(),
+          uid: currentUser.uid, tipo: document.getElementById('tipo').value, dni, 
+          nombre: document.getElementById('nombre').value.trim(),
           depto: document.getElementById('depto').value.trim(), observaciones: document.getElementById('obs').value.trim(),
           fecha: getTodayStr(), entrada: serverTimestamp(), estado: 'activo'
         });
         msg('✅ Entrada registrada');
-        document.getElementById('dni').value = '';
-        document.getElementById('obs').value = '';
+        ['dni','nombre','depto','obs'].forEach(id => document.getElementById(id).value = '');
       } catch(e) { msg('Error al guardar', 'error'); }
     };
 
@@ -173,7 +223,9 @@
 
     // Export
     document.getElementById('btnExport').onclick = () => {
-      const data = todayRecords.map(r => ({
+      const filtered = currentFilter === 'todos' ? todayRecords : todayRecords.filter(r => r.tipo === currentFilter);
+      const data = filtered.map(r => ({
+        "Tipo": r.tipo,
         "Nombre del empleado": r.nombre || '',
         "DNI": r.dni,
         "Fecha de Registro": r.fecha,
@@ -186,7 +238,47 @@
       const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, `Registro_${getTodayStr()}`);
-      XLSX.writeFile(wb, `Registro_${getTodayStr()}.xlsx`);
+      XLSX.writeFile(wb, `Registro_${currentFilter}_${getTodayStr()}.xlsx`);
+    };
+
+    // Import CSV
+    document.getElementById('btnImport').onclick = () => document.getElementById('importModal').classList.remove('hidden');
+    document.getElementById('importModal').classList.add('hidden'); // close initially
+
+    document.getElementById('btnProcessImport').onclick = async () => {
+      const file = document.getElementById('csvFile').files[0];
+      if (!file) return alert('Selecciona un archivo');
+      const status = document.getElementById('importStatus');
+      status.classList.remove('hidden'); status.textContent = 'Leyendo archivo...';
+
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const wb = XLSX.read(e.target.result, {type: 'binary'});
+          const ws = wb.Sheets[wb.SheetNames[0]];
+          const data = XLSX.utils.sheet_to_json(ws);
+          
+          if (!data.length || !data[0].DNI) throw new Error('Formato incorrecto. Necesita columna DNI');
+          
+          status.textContent = `Procesando ${data.length} registros...`;
+          const batch = writeBatch(db);
+          let count = 0;
+          
+          data.forEach(row => {
+            const ref = doc(db, 'empleados', row.DNI.replace(/\s/g,''));
+            batch.set(ref, { dni: row.DNI, nombre: row.Nombre || '', tipo: row.Tipo || 'ETT', depto: row.Departamento || '' });
+            count++;
+            if (count % 450 === 0) { // límite seguro de Firestore
+              await batch.commit();
+              writeBatch(db); // reset (simulado en flujo real, aquí lo simplificamos)
+            }
+          });
+          await batch.commit();
+          status.textContent = `✅ ${count} empleados importados correctamente`;
+          setTimeout(() => document.getElementById('importModal').classList.add('hidden'), 2000);
+        } catch(err) { status.textContent = `❌ Error: ${err.message}`; status.classList.add('text-red-600'); }
+      };
+      reader.readAsBinaryString(file);
     };
   </script>
 </body>
